@@ -1,0 +1,172 @@
+C51 COMPILER V9.55   RTC                                                                   04/12/2019 12:10:20 PAGE 1   
+
+
+C51 COMPILER V9.55, COMPILATION OF MODULE RTC
+OBJECT MODULE PLACED IN rtc.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE rtc.c OPTIMIZE(9,SPEED) REGFILE(.\DisplayRoulette.ORC) BROWSE DEBUG OBJE
+                    -CTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "display_slot.h"
+   2          
+   3          
+   4           
+   5          union my_data idata my_data;
+   6          
+   7          void rtc_write(unsigned char reg,unsigned char dat)
+   8          {
+   9   1        while ((RTC0ADR&0x80)==0x80); //wait bussy flag
+  10   1        RTC0ADR=reg;
+  11   1        RTC0DAT=dat;
+  12   1      }
+  13          
+  14          unsigned char rtc_read(unsigned char reg)
+  15          {
+  16   1         while ((RTC0ADR&0x80)==0x80); //wait bussy flag
+  17   1         RTC0ADR=reg;
+  18   1         RTC0ADR=reg|0x80;     //write busy 1
+  19   1         while ((RTC0ADR&0x80)==0x80); //wait bussy flag
+  20   1         return RTC0DAT;
+  21   1      } 
+  22          
+  23          bit rtc_readram()
+  24          {
+  25   1          unsigned char addr;
+  26   1      // Read from the entire smaRTClock RAM
+  27   1          CRC0CN=0x18;    //init crc generator
+  28   1        RTC0ADR = 0x0E;// address the RAMADDR register
+  29   1        RTC0DAT = 0x00;// write the address of 0x00 to RAMADDR
+  30   1        while ((RTC0ADR & 0x80) == 0x80); // poll on the BUSY bit
+  31   1        RTC0ADR = 0x0F; // address the RAMDATA register
+  32   1        for (addr = 0; addr < sizeof(union my_data)-2; addr++)
+  33   1        {
+  34   2         RTC0ADR |= 0x80; // initiate a read of the RAMDATA register
+  35   2         while ((RTC0ADR & 0x80) == 0x80); // poll on the BUSY bit
+  36   2         my_data.rtc_ram[addr] = RTC0DAT; // copy the data from the entire RAM
+  37   2         CRC0IN=my_data.rtc_ram[addr];
+  38   2        }
+  39   1      
+  40   1        RTC0ADR |= 0x80; // initiate a read of the RAMDATA register
+  41   1        while ((RTC0ADR & 0x80) == 0x80); // poll on the BUSY bit
+  42   1        CRC0CN=0x10;   //select crc byte 0
+  43   1        if (RTC0DAT!=CRC0DAT) 
+  44   1         return 0;
+  45   1      
+  46   1        RTC0ADR |= 0x80; // initiate a read of the RAMDATA register
+  47   1        while ((RTC0ADR & 0x80) == 0x80); // poll on the BUSY bit
+  48   1        CRC0CN=0x11;   //select crc byte 0
+  49   1        if (RTC0DAT!= CRC0DAT) 
+  50   1         return 0;
+  51   1        return 1;
+  52   1      
+  53   1      }
+  54          
+C51 COMPILER V9.55   RTC                                                                   04/12/2019 12:10:20 PAGE 2   
+
+  55          void rtc_writeram()
+  56          {
+  57   1         unsigned char addr;
+  58   1         CRC0CN=0x18;    //init crc generator
+  59   1      // Write to the entire smaRTClock RAM
+  60   1        RTC0ADR = 0x0E;// address the RAMADDR register
+  61   1        RTC0DAT = 0x00;// write the address of 0x00 to RAMADDR
+  62   1        while ((RTC0ADR & 0x80) == 0x80); // poll on the BUSY bit
+  63   1        RTC0ADR = 0x0F;// address the RAMDATA register
+  64   1        for (addr = 0; addr < sizeof(union my_data)-2; addr++)
+  65   1        {
+  66   2         CRC0IN=my_data.rtc_ram[addr];
+  67   2         RTC0DAT = my_data.rtc_ram[addr]; // write 0xA5 to every RAM address
+  68   2         while ((RTC0ADR & 0x80) == 0x80);// poll on the BUSY bit
+  69   2        }
+  70   1        CRC0CN=0x10;   //select crc byte 0
+  71   1        RTC0DAT = CRC0DAT; // write 0xA5 to every RAM address
+  72   1        while ((RTC0ADR & 0x80) == 0x80);// poll on the BUSY bit
+  73   1      
+  74   1        CRC0CN=0x11;   //select crc byte 1
+  75   1        RTC0DAT = CRC0DAT; // write 0xA5 to every RAM address
+  76   1        while ((RTC0ADR & 0x80) == 0x80);// poll on the BUSY bit   
+  77   1      
+  78   1      }
+  79          
+  80          //setup rtc in self oscilating mode !!!!!
+  81          bit rtc_init()
+  82          {
+  83   1        bit res;
+  84   1        unsigned char c;
+  85   1      
+  86   1        res=1;
+  87   1        if (RTC0KEY==3)
+  88   1         // problem RTC locked need reset
+  89   1          RSTSRC|=0x20;    //software reset
+  90   1          //unlock RTC
+  91   1        if (RTC0KEY==0)
+  92   1         {
+  93   2           //unlock the RTC is no locked
+  94   2           RTC0KEY = 0xA5;
+  95   2           RTC0KEY = 0xF1;
+  96   2         };
+  97   1      
+  98   1        c=rtc_read(6); //READ RTC0CN
+  99   1        if (((c&0x20)==0x20) || ((c&0x80)==0))  //check OSCFAIL
+ 100   1         {
+ 101   2          res=0;   //save status for return value
+ 102   2          rtc_write(6,0); //disable RTC  
+ 103   2          rtc_write(7,0x40); //enale crystal mode
+ 104   2          rtc_write(7,0xc0); //enale atogain
+ 105   2          rtc_write(6,0x80); //enable auto gain
+ 106   2          while ((rtc_read(7)&0x10)!=0x10); //clock be stable not nessery for self oscilating mode
+ 107   2         // rtc_write(7,0x40); //disable autogain
+ 108   2         // rtc_write(6,0xd0); //start counting enable missingo clock
+ 109   2      
+ 110   2         }
+ 111   1         return res;
+ 112   1      }
+ 113          
+ 114          unsigned long rtc_readTime()
+ 115          {
+ 116   1        unsigned long time;
+C51 COMPILER V9.55   RTC                                                                   04/12/2019 12:10:20 PAGE 3   
+
+ 117   1        unsigned char c,d;
+ 118   1      
+ 119   1         rtc_write(6,0xD1);            //transwer timer value to capture register
+ 120   1         while ((rtc_read(6)&0x1)==1); // wait time transwer to capture register
+ 121   1      
+ 122   1         for (c=2,d=4;d!=0;c++)  
+ 123   1            ((unsigned char *) &time)[--d]=rtc_read(c);
+ 124   1      
+ 125   1         return time;
+ 126   1      
+ 127   1      }
+ 128          
+ 129          void rtc_writeTime( unsigned long time)
+ 130          {
+ 131   1      
+ 132   1        unsigned char c,d;
+ 133   1      
+ 134   1         rtc_write(0,0);
+ 135   1         rtc_write(1,0);
+ 136   1         for (c=2,d=4;d!=0;c++)  
+ 137   1           rtc_write(c,((unsigned char *) &time)[--d]);
+ 138   1      
+ 139   1         rtc_write(6,0xD2);    //transwer timer value to capture register
+ 140   1         while ((rtc_read(6)&0x2)==2); // wait time transwer to capture register
+ 141   1      
+ 142   1      }
+ 143          
+ 144          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    379    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      11
+   IDATA SIZE       =     21    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

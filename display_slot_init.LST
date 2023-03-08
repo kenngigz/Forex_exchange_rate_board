@@ -1,0 +1,188 @@
+C51 COMPILER V9.55   DISPLAY_SLOT_INIT                                                     04/12/2019 12:10:19 PAGE 1   
+
+
+C51 COMPILER V9.55, COMPILATION OF MODULE DISPLAY_SLOT_INIT
+OBJECT MODULE PLACED IN display_slot_init.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE display_slot_init.c OPTIMIZE(9,SPEED) REGFILE(.\DisplayRoulette.ORC) BRO
+                    -WSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          /////////////////////////////////////
+   2          //  Generated Initialization File  //
+   3          /////////////////////////////////////
+   4          
+   5          #include "compiler_defs.h"
+   6          #include "C8051F410_defs.h"
+   7          
+   8          // Peripheral specific initialization functions,
+   9          // Called from the Init_Device() function
+  10          void Reset_Sources_Init()
+  11          {
+  12   1          int i = 0;
+  13   1          VDM0CN    = 0x80;
+  14   1          for (i = 0; i < 20; i++);  // Wait 5us for initialization
+  15   1          RSTSRC    = 0x06;
+  16   1      }
+  17          
+  18          void PCA_Init()
+  19          {
+  20   1          PCA0CN    = 0x40;
+  21   1          PCA0MD    &= ~0x40;
+  22   1          PCA0MD    = 0x00;
+  23   1          PCA0CPM0  = 0x46;
+  24   1          PCA0CPL5  = 0xFF;
+  25   1          PCA0MD    |= 0x20;
+  26   1          PCA0CPH0  = 0x02;
+  27   1      }
+  28          
+  29          void Timer_Init()
+  30          {
+  31   1          TCON      = 0x50;
+  32   1          TMOD      = 0x22;
+  33   1          CKCON     = 0x4C;
+  34   1          TH0       = 0x5D;
+  35   1          TH1       = 0x2B;
+  36   1          TMR2RLL   = 0x7F;
+  37   1          TMR2RLH   = 0x60;
+  38   1          TMR2L     = 0x7F;
+  39   1          TMR2H     = 0x60;
+  40   1      }
+  41          
+  42          void UART_Init()
+  43          {
+  44   1          SCON0     = 0x10;
+  45   1      }
+  46          
+  47          void SMBus_Init()
+  48          {
+  49   1          SMB0CF    = 0xC0;
+  50   1      }
+  51          
+  52          void SPI_Init()
+  53          {
+  54   1          SPI0CFG   = 0x40;
+C51 COMPILER V9.55   DISPLAY_SLOT_INIT                                                     04/12/2019 12:10:19 PAGE 2   
+
+  55   1          SPI0CN    = 0x01;
+  56   1      }
+  57          
+  58          void ADC_Init()
+  59          {
+  60   1          ADC0MX    = 0x0F;
+  61   1          ADC0CF    = 0xFA;
+  62   1          ADC0CN    = 0x80;
+  63   1      }
+  64          
+  65          void DAC_Init()
+  66          {
+  67   1          IDA0CN    = 0xF3;
+  68   1      }
+  69          
+  70          void Comparator_Init()
+  71          {
+  72   1          int i = 0;
+  73   1          CPT0CN    = 0x80;
+  74   1          for (i = 0; i < 35; i++);  // Wait 10us for initialization
+  75   1          CPT0CN    &= ~0x30;
+  76   1          CPT0MX    = 0x70;
+  77   1      }
+  78          
+  79          void Voltage_Reference_Init()
+  80          {
+  81   1          REF0CN    = 0x1A;
+  82   1      }
+  83          
+  84          void Port_IO_Init()
+  85          {
+  86   1          // P0.0  -  Skipped,     Open-Drain, Analog
+  87   1          // P0.1  -  Skipped,     Open-Drain, Digital
+  88   1          // P0.2  -  SCK  (SPI0), Push-Pull,  Digital
+  89   1          // P0.3  -  MISO (SPI0), Open-Drain, Digital
+  90   1          // P0.4  -  TX0 (UART0), Push-Pull,  Digital
+  91   1          // P0.5  -  RX0 (UART0), Open-Drain, Digital
+  92   1          // P0.6  -  MOSI (SPI0), Push-Pull,  Digital
+  93   1          // P0.7  -  SDA (SMBus), Open-Drain, Digital
+  94   1      
+  95   1          // P1.0  -  SCL (SMBus), Open-Drain, Digital
+  96   1          // P1.1  -  CEX0 (PCA),  Push-Pull,  Digital
+  97   1          // P1.2  -  Unassigned,  Push-Pull,  Digital
+  98   1          // P1.3  -  Unassigned,  Push-Pull,  Digital
+  99   1          // P1.4  -  Unassigned,  Open-Drain, Digital
+ 100   1          // P1.5  -  Unassigned,  Open-Drain, Digital
+ 101   1          // P1.6  -  Unassigned,  Push-Pull,  Digital
+ 102   1          // P1.7  -  Unassigned,  Open-Drain, Digital
+ 103   1      
+ 104   1          // P2.0  -  Unassigned,  Open-Drain, Digital
+ 105   1          // P2.1  -  Unassigned,  Open-Drain, Digital
+ 106   1          // P2.2  -  Unassigned,  Open-Drain, Digital
+ 107   1          // P2.3  -  Unassigned,  Open-Drain, Digital
+ 108   1          // P2.4  -  Unassigned,  Push-Pull,  Digital
+ 109   1          // P2.5  -  Unassigned,  Push-Pull,  Digital
+ 110   1          // P2.6  -  Unassigned,  Push-Pull,  Digital
+ 111   1          // P2.7  -  Unassigned,  Open-Drain, Digital
+ 112   1      
+ 113   1          P0MDIN    = 0xFE;
+ 114   1          P0MDOUT   = 0x54;
+ 115   1          P1MDOUT   = 0x4E;
+ 116   1          P2MDOUT   = 0x70;
+C51 COMPILER V9.55   DISPLAY_SLOT_INIT                                                     04/12/2019 12:10:19 PAGE 3   
+
+ 117   1          P0SKIP    = 0x03;
+ 118   1          XBR0      = 0x07;
+ 119   1          XBR1      = 0xC1;
+ 120   1      }
+ 121          
+ 122          void Oscillator_Init()
+ 123          {
+ 124   1          int i = 0;
+ 125   1          PFE0CN    &= ~0x20;
+ 126   1          FLSCL     = 0x10;
+ 127   1          PFE0CN    |= 0x20;
+ 128   1          CLKMUL    = 0x80;
+ 129   1          for (i = 0; i < 20; i++);    // Wait 5us for initialization
+ 130   1          CLKMUL    |= 0xC0;
+ 131   1          while ((CLKMUL & 0x20) == 0);
+ 132   1          CLKSEL    = 0x02;
+ 133   1          OSCICN    = 0x87;
+ 134   1      }
+ 135          
+ 136          void Interrupts_Init()
+ 137          {
+ 138   1          EIE1      = 0x80;
+ 139   1          EIP1      = 0x80;
+ 140   1          IE        = 0x90;
+ 141   1      }
+ 142          
+ 143          // Initialization function for device,
+ 144          // Call Init_Device() from your main program
+ 145          void Init_Device(void)
+ 146          {
+ 147   1          Reset_Sources_Init();
+ 148   1          PCA_Init();
+ 149   1          Timer_Init();
+ 150   1          UART_Init();
+ 151   1          SMBus_Init();
+ 152   1          SPI_Init();
+ 153   1          ADC_Init();
+ 154   1          DAC_Init();
+ 155   1          Comparator_Init();
+ 156   1          Voltage_Reference_Init();
+ 157   1          Port_IO_Init();
+ 158   1          Oscillator_Init();
+ 159   1          Interrupts_Init();
+ 160   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    240    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

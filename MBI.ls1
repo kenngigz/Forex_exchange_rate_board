@@ -1,0 +1,985 @@
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.02b
+OBJECT MODULE PLACED IN MBI.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE MBI.src PR(.\MBI.ls1) EP DEBUG
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; .\MBI.SRC generated from: MBI.c
+                       2     ; COMPILER INVOKED BY:
+                       3     ;        C:\Keil\C51\BIN\C51.EXE MBI.c ROM(COMPACT) OPTIMIZE(9,SPEED) REGFILE(.\DisplayRoul
+                             ette.ORC) BROWSE DEBUG OBJECTEXTEND TABS(2) SRC(.\MBI.SRC)
+                       4     
+                       5     $nomod51 
+                       6     
+                       7     NAME    MBI
+                       8     
+  00DA                 9     CCF2    BIT     0D8H.2
+  009B                10     TB80    BIT     098H.3
+  0096                11     IDA0    DATA    096H
+  00A2                12     SPI0CKR DATA    0A2H
+  0082                13     Dclk    BIT     080H.2
+  00DB                14     CCF3    BIT     0D8H.3
+  00F4                15     IDA1    DATA    0F4H
+  0080                16     P0      DATA    080H
+  00F8                17     SPIEN   BIT     0F8H.0
+  00DC                18     CCF4    BIT     0D8H.4
+  0090                19     P1      DATA    090H
+  00DD                20     CCF5    BIT     0D8H.5
+  00A0                21     P2      DATA    0A0H
+  00BC                22     ADC0CF  DATA    0BCH
+  00D6                23     AC      BIT     0D0H.6
+  00F9                24     PCA0    DATA    0F9H
+  00E6                25     EIE1    DATA    0E6H
+  00AE                26     RTC0KEY DATA    0AEH
+  00AF                27     EA      BIT     0A8H.7
+  009D                28     MCE0    BIT     098H.5
+  00E7                29     EIE2    DATA    0E7H
+  008F                30     PSCTL   DATA    08FH
+  00DF                31     CF      BIT     0D8H.7
+  00E4                32     IT01CF  DATA    0E4H
+  00E8                33     ADC0CN  DATA    0E8H
+  00A4                34     P0MDOUT DATA    0A4H
+  00A5                35     P1MDOUT DATA    0A5H
+  00CB                36     TMR2RLH DATA    0CBH
+  00A8                37     IE      DATA    0A8H
+  00A6                38     P2MDOUT DATA    0A6H
+  0093                39     TMR3RLH DATA    093H
+  00F6                40     EIP1    DATA    0F6H
+  00F9                41     TXBMT   BIT     0F8H.1
+  00F7                42     EIP2    DATA    0F7H
+  00B9                43     IDA0CN  DATA    0B9H
+  00FC                44     PCA0CPH0        DATA    0FCH
+  00CA                45     TMR2RLL DATA    0CAH
+  00B5                46     IDA1CN  DATA    0B5H
+  00EA                47     PCA0CPH1        DATA    0EAH
+  0092                48     TMR3RLL DATA    092H
+  0082                49     DP      DATA    082H
+  00EC                50     PCA0CPH2        DATA    0ECH
+  00DE                51     CR      BIT     0D8H.6
+  00CB                52     T2SPLIT BIT     0C8H.3
+  00CF                53     TF2H    BIT     0C8H.7
+  00C3                54     ADC0GT  DATA    0C3H
+  00EE                55     PCA0CPH3        DATA    0EEH
+  009C                56     REN0    BIT     098H.4
+  00FE                57     PCA0CPH4        DATA    0FEH
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     2
+
+  00FB                58     PCA0CPL0        DATA    0FBH
+  00E9                59     PCA0CPL1        DATA    0E9H
+  00DA                60     PCA0CPM0        DATA    0DAH
+  00D9                61     PCA0MD  DATA    0D9H
+  00D8                62     PCA0CN  DATA    0D8H
+  00D3                63     PCA0CPH5        DATA    0D3H
+  00EB                64     PCA0CPL2        DATA    0EBH
+  00DB                65     PCA0CPM1        DATA    0DBH
+  00CE                66     TF2L    BIT     0C8H.6
+  00ED                67     PCA0CPL3        DATA    0EDH
+  00DC                68     PCA0CPM2        DATA    0DCH
+  00BA                69     ADC0TK  DATA    0BAH
+  00B8                70     IP      DATA    0B8H
+  00C2                71     ARBLOST BIT     0C0H.2
+  00C5                72     ADC0LT  DATA    0C5H
+  00FD                73     PCA0CPL4        DATA    0FDH
+  00DD                74     PCA0CPM3        DATA    0DDH
+  00DE                75     PCA0CPM4        DATA    0DEH
+  00D2                76     PCA0CPL5        DATA    0D2H
+  0084                77     CRC0CN  DATA    084H
+  00D7                78     CY      BIT     0D0H.7
+  00C0                79     SI      BIT     0C0H.0
+  00CE                80     PCA0CPM5        DATA    0CEH
+  0093                81     CE24L01 BIT     090H.3
+  00E1                82     XBR0    DATA    0E1H
+  00C1                83     SMB0CF  DATA    0C1H
+  00E3                84     PFE0CN  DATA    0E3H
+  00E2                85     XBR1    DATA    0E2H
+  00AA                86     EMI0CN  DATA    0AAH
+  00BB                87     ADC0MX  DATA    0BBH
+  00D1                88     REF0CN  DATA    0D1H
+  00C9                89     REG0CN  DATA    0C9H
+  0085                90     CRC0IN  DATA    085H
+  00ED                91     AD0INT  BIT     0E8H.5
+  00AF                92     ONESHOT DATA    0AFH
+  0081                93     SP      DATA    081H
+  00CC                94     TF2CEN  BIT     0C8H.4
+  00D2                95     OV      BIT     0D0H.2
+  00C0                96     SMB0CN  DATA    0C0H
+  00EE                97     BURSTEN BIT     0E8H.6
+  00CC                98     TMR2    DATA    0CCH
+  00FD                99     MODF    BIT     0F8H.5
+  0094               100     TMR3    DATA    094H
+  00B0               101     P0ODEN  DATA    0B0H
+  009F               102     S0MODE  BIT     098H.7
+  00FF               103     VDM0CN  DATA    0FFH
+  00F1               104     P0MDIN  DATA    0F1H
+  009D               105     CPT0MD  DATA    09DH
+  009B               106     CPT0CN  DATA    09BH
+  00F2               107     P1MDIN  DATA    0F2H
+  009C               108     CPT1MD  DATA    09CH
+  009A               109     CPT1CN  DATA    09AH
+  00F3               110     P2MDIN  DATA    0F3H
+  00CD               111     TF2LEN  BIT     0C8H.5
+  00C7               112     P0MASK  DATA    0C7H
+  00F8               113     SPI0CN  DATA    0F8H
+  00BF               114     P1MASK  DATA    0BFH
+  0087               115     PCON    DATA    087H
+  00FF               116     SPIF    BIT     0F8H.7
+  00C9               117     T2RCLK  BIT     0C8H.1
+  0089               118     TMOD    DATA    089H
+  0088               119     TCON    DATA    088H
+  0092               120     led     BIT     090H.2
+  00FE               121     WCOL    BIT     0F8H.6
+  00DF               122     CRC0FLIP        DATA    0DFH
+  00FA               123     NSSMD0  BIT     0F8H.2
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     3
+
+  00FB               124     NSSMD1  BIT     0F8H.3
+  00C8               125     TMR2CN  DATA    0C8H
+  00D4               126     P0SKIP  DATA    0D4H
+  0091               127     TMR3CN  DATA    091H
+  00C8               128     T2XCLK  BIT     0C8H.0
+  00D5               129     P1SKIP  DATA    0D5H
+  00D6               130     P2SKIP  DATA    0D6H
+  0089               131     IE0     BIT     088H.1
+  009F               132     CPT0MX  DATA    09FH
+  008B               133     IE1     BIT     088H.3
+  00B3               134     OSCICL  DATA    0B3H
+  009E               135     CPT1MX  DATA    09EH
+  00A9               136     CLKSEL  DATA    0A9H
+  0086               137     sdi     BIT     080H.6
+  00F0               138     B       DATA    0F0H
+  00BE               139     ADC0H   DATA    0BEH
+  00B2               140     OSCICN  DATA    0B2H
+  00CA               141     TMR2RL  DATA    0CAH
+  00BD               142     ADC0L   DATA    0BDH
+  0092               143     TMR3RL  DATA    092H
+  0083               144     sdo     BIT     080H.3
+  00E0               145     ACC     DATA    0E0H
+  0097               146     IDA0H   DATA    097H
+  00AC               147     ES0     BIT     0A8H.4
+  00F5               148     IDA1H   DATA    0F5H
+  00EF               149     AD0EN   BIT     0E8H.7
+  00A9               150     ET0     BIT     0A8H.1
+  00FB               151     PCA0CP0 DATA    0FBH
+  00AB               152     ET1     BIT     0A8H.3
+  008D               153     TF0     BIT     088H.5
+  00E9               154     PCA0CP1 DATA    0E9H
+  00AB               155     CLKMUL  DATA    0ABH
+  00A4               156     mbiLE   BIT     0A0H.4
+  00AD               157     ET2     BIT     0A8H.5
+  0098               158     RI0     BIT     098H.0
+  008F               159     TF1     BIT     088H.7
+  00EB               160     PCA0CP2 DATA    0EBH
+  0096               161     IDA0L   DATA    096H
+  00ED               162     PCA0CP3 DATA    0EDH
+  00F4               163     IDA1L   DATA    0F4H
+  008C               164     TH0     DATA    08CH
+  00A8               165     EX0     BIT     0A8H.0
+  0099               166     TI0     BIT     098H.1
+  0088               167     IT0     BIT     088H.0
+  00FD               168     PCA0CP4 DATA    0FDH
+  00FA               169     PCA0H   DATA    0FAH
+  008D               170     TH1     DATA    08DH
+  00C7               171     MASTER  BIT     0C0H.7
+  00AA               172     EX1     BIT     0A8H.2
+  008A               173     IT1     BIT     088H.2
+  00D2               174     PCA0CP5 DATA    0D2H
+  00D0               175     P       BIT     0D0H.0
+  00C1               176     ACK     BIT     0C0H.1
+  00B1               177     OSCXCN  DATA    0B1H
+  008A               178     TL0     DATA    08AH
+  00F9               179     PCA0L   DATA    0F9H
+  008B               180     TL1     DATA    08BH
+  00C6               181     TXMODE  BIT     0C0H.6
+  00BC               182     PS0     BIT     0B8H.4
+  00B9               183     PT0     BIT     0B8H.1
+  00D3               184     RS0     BIT     0D0H.3
+  00BB               185     PT1     BIT     0B8H.3
+  00D4               186     RS1     BIT     0D0H.4
+  00BD               187     PT2     BIT     0B8H.5
+  008C               188     TR0     BIT     088H.4
+  008E               189     TR1     BIT     088H.6
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     4
+
+  00CA               190     TR2     BIT     0C8H.2
+  00B8               191     PX0     BIT     0B8H.0
+  00BA               192     PX1     BIT     0B8H.2
+  0083               193     DPH     DATA    083H
+  00C4               194     ADC0GTH DATA    0C4H
+  0082               195     DPL     DATA    082H
+  00C3               196     ADC0GTL DATA    0C3H
+  0099               197     SBUF0   DATA    099H
+  00AE               198     ESPI0   BIT     0A8H.6
+  00C6               199     ADC0LTH DATA    0C6H
+  00EF               200     RSTSRC  DATA    0EFH
+  00D7               201     P0MAT   DATA    0D7H
+  0086               202     CRC0DAT DATA    086H
+  00CF               203     P1MAT   DATA    0CFH
+  0098               204     SCON0   DATA    098H
+  00C5               205     ADC0LTL DATA    0C5H
+  00C5               206     STA     BIT     0C0H.5
+  00BE               207     PSPI0   BIT     0B8H.6
+  00C2               208     SMB0DAT DATA    0C2H
+  00CD               209     TMR2H   DATA    0CDH
+  00A1               210     SPI0CFG DATA    0A1H
+  0095               211     TMR3H   DATA    095H
+  008E               212     CKCON   DATA    08EH
+  00FC               213     RXOVRN  BIT     0F8H.4
+  00CC               214     TMR2L   DATA    0CCH
+  00AC               215     RTC0ADR DATA    0ACH
+  00C3               216     ACKRQ   BIT     0C0H.3
+  0094               217     TMR3L   DATA    094H
+  00EA               218     AD0LJST BIT     0E8H.2
+  00AD               219     RTC0DAT DATA    0ADH
+  00A5               220     sel0    BIT     0A0H.5
+  00D5               221     F0      BIT     0D0H.5
+  00B6               222     FLSCL   DATA    0B6H
+  00A6               223     sel1    BIT     0A0H.6
+  00E8               224     AD0CM0  BIT     0E8H.0
+  00D1               225     F1      BIT     0D0H.1
+  00C4               226     STO     BIT     0C0H.4
+  00E9               227     AD0CM1  BIT     0E8H.1
+  00A3               228     SPI0DAT DATA    0A3H
+  00BD               229     ADC0    DATA    0BDH
+  0096               230     CSN24L01        BIT     090H.6
+  00EB               231     AD0WINT BIT     0E8H.3
+  00EC               232     AD0BUSY BIT     0E8H.4
+  00D0               233     PSW     DATA    0D0H
+  00D8               234     CCF0    BIT     0D8H.0
+  009A               235     RB80    BIT     098H.2
+  00B7               236     FLKEY   DATA    0B7H
+  00D9               237     CCF1    BIT     0D8H.1
+                     238     ?PR?address?MBI      SEGMENT CODE INBLOCK 
+                     239     ?DT?address?MBI      SEGMENT DATA OVERLAYABLE 
+                     240     ?PR?_ptr?MBI         SEGMENT CODE INBLOCK 
+                     241     ?DT?_ptr?MBI         SEGMENT DATA OVERLAYABLE 
+                     242     ?PR?_gotoxy?MBI      SEGMENT CODE INBLOCK 
+                     243     ?PR?_SetPoint?MBI    SEGMENT CODE INBLOCK 
+                     244     ?BI?_SetPoint?MBI    SEGMENT BIT OVERLAYABLE 
+                     245     ?CO?MBI              SEGMENT CODE 
+                     246     ?DT?MBI              SEGMENT DATA 
+                     247     ?PR?MBI              SEGMENT CODE INBLOCK 
+                     248             EXTRN   IDATA (my_data)
+                     249             EXTRN   CODE (?C?IMUL)
+                     250             PUBLIC  complicate
+                     251             PUBLIC  screen
+                     252             PUBLIC  numbers
+                     253             PUBLIC  cs2
+                     254             PUBLIC  cs1
+                     255             PUBLIC  ?_SetPoint?BIT
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     5
+
+                     256             PUBLIC  _SetPoint
+                     257             PUBLIC  _gotoxy
+                     258             PUBLIC  _ptr
+                     259             PUBLIC  address
+                     260     
+----                 261             XSEG  AT  0E0H
+00E0                 262              screen:   DS   576
+                     263     
+----                 264             RSEG  ?BI?_SetPoint?MBI
+0000                 265     ?_SetPoint?BIT:
+0000                 266              sr?349:   DBIT   1
+                     267     
+----                 268             RSEG  ?DT?_ptr?MBI
+0000                 269     ?_ptr?BYTE:
+0000                 270               k?145:   DS   1
+                     271     
+----                 272             RSEG  ?DT?address?MBI
+0000                 273     ?address?BYTE:
+0000                 274            chip?040:   DS   2
+                     275     
+----                 276             RSEG  ?DT?MBI
+0000                 277          complicate:   DS   5
+                     278     
+----                 279             RSEG  ?CO?MBI
+0000                 280     cs1:
+0000 01              281             DB      001H
+0001 00              282             DB      000H
+0002 0D              283             DB      00DH
+0003 0C              284             DB      00CH
+0004 0B              285             DB      00BH
+0005 03              286             DB      003H
+0006 04              287             DB      004H
+0007 08              288             DB      008H
+                     289     
+0008                 290     cs2:
+0008 07              291             DB      007H
+0009 06              292             DB      006H
+000A 05              293             DB      005H
+000B 09              294             DB      009H
+000C 0A              295             DB      00AH
+000D 02              296             DB      002H
+000E 0F              297             DB      00FH
+000F 0E              298             DB      00EH
+                     299     
+0010                 300     numbers:
+0010 FC              301             DB      0FCH
+0011 60              302             DB      060H
+0012 DA              303             DB      0DAH
+0013 F2              304             DB      0F2H
+0014 66              305             DB      066H
+0015 B6              306             DB      0B6H
+0016 BE              307             DB      0BEH
+0017 E0              308             DB      0E0H
+0018 FE              309             DB      0FEH
+0019 F6              310             DB      0F6H
+001A 02              311             DB      002H
+001B 00              312             DB      000H
+001C 00              313             DB      000H
+001D 00              314             DB      000H
+001E 00              315             DB      000H
+001F 00              316             DB  000H
+                     317     
+                     318     
+                     319     ; #include "display_slot.h"
+                     320     ; #include <intrins.h>
+                     321     ; 
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     6
+
+                     322     ; 
+                     323     ; 
+                     324     ; 
+                     325     ; #define NO_LACH            -1
+                     326     ; 
+                     327     ; #define DATA_LACH          1
+                     328     ; #define GLOBAL_LACH        3
+                     329     ; #define READ_CONFIGURATION 5
+                     330     ; #define EABLE_ERRORDETECT  7
+                     331     ; #define READ_ERRORSTATUS   9
+                     332     ; #define WRITE_CONFIG       11
+                     333     ; #define RESET_PWM          13
+                     334     ; 
+                     335     ; 
+                     336     ; 
+                     337     ; unsigned char xdata screen[NUM_OF_MBI*NUM_OF_COLUMNS*16] _at_ 0x100-0x20;
+                     338     ; 
+                     339     ; 
+                     340     ;  
+                     341     ; //b1,a1,f2,f1,g1,c2,b2,a2,D1,d2,e2,e1,d1,c1,D2,g2
+                     342     ; //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15
+                     343     ;  
+                     344     ; const unsigned char code cs1[8]={ 1, 0,13,12,11, 3, 4, 8};    
+                     345     ; const unsigned char code cs2[8]={ 7,  6, 5, 9,10, 2,15,14};
+                     346     ; 
+                     347     ; 
+                     348     ; struct caddr {
+                     349     ;                 unsigned int address;
+                     350     ;                                                               unsigned char column;
+                     351     ;                                                               unsigned char row;
+                     352     ;                                                               unsigned char segment;
+                     353     ;                                                       } complicate;
+                     354     ; 
+                     355     ; 
+                     356     
+----                 357             RSEG  ?PR?MBI
+0000                 358     Com0013:
+0000                 359     L?0020:
+                     360             USING   0
+0000 74E0            361             MOV     A,#LOW (screen)
+0002 2500     F      362             ADD     A,complicate+01H
+0004 F582            363             MOV     DPL,A
+0006 7400            364             MOV     A,#HIGH (screen)
+0008 3500     F      365             ADDC    A,complicate
+000A F583            366             MOV     DPH,A
+000C 22              367             RET     
+                     368     ; END OF Com0013
+                     369     
+                     370     ; void address()
+                     371     
+----                 372             RSEG  ?PR?address?MBI
+0000                 373     address:
+                     374             USING   0
+                     375                             ; SOURCE LINE # 38
+                     376     ;---- Variable 'seg?042' assigned to Register 'R2/R3' ----
+                     377     ;  {
+                     378                             ; SOURCE LINE # 39
+                     379     ;    unsigned int chip,col,seg;
+                     380     ;                                                  
+                     381     ;    chip = complicate.row;
+                     382                             ; SOURCE LINE # 42
+0000 750000   F      383             MOV     chip?040,#00H
+0003 850000   F      384             MOV     chip?040+01H,complicate+03H
+                     385     ;    col=       complicate.column/2; 
+                     386                             ; SOURCE LINE # 43
+0006 E500     F      387             MOV     A,complicate+02H
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     7
+
+0008 C3              388             CLR     C
+0009 13              389             RRC     A
+000A FF              390             MOV     R7,A
+000B 7E00            391             MOV     R6,#00H
+                     392     ;---- Variable 'col?041' assigned to Register 'R6/R7' ----
+                     393     ;    if ((complicate.column&1)==0)      
+                     394                             ; SOURCE LINE # 44
+000D E500     F      395             MOV     A,complicate+02H
+000F 20E007          396             JB      ACC.0,?C0001
+                     397     ;     seg=cs1[complicate.segment];
+                     398                             ; SOURCE LINE # 45
+0012 E500     F      399             MOV     A,complicate+04H
+0014 900000   F      400             MOV     DPTR,#cs1
+0017 8005            401             SJMP    ?C0018
+0019                 402     ?C0001:
+                     403     ;    else
+                     404     ;     seg=cs2[complicate.segment];               
+                     405                             ; SOURCE LINE # 47
+0019 E500     F      406             MOV     A,complicate+04H
+001B 900000   F      407             MOV     DPTR,#cs2
+001E                 408     ?C0018:
+001E 93              409             MOVC    A,@A+DPTR
+001F 7A00            410             MOV     R2,#00H
+0021 FB              411             MOV     R3,A
+0022                 412     ?C0002:
+                     413     ;    complicate.address=NUM_OF_MBI*(16*col+seg)+chip;
+                     414                             ; SOURCE LINE # 48
+0022 EF              415             MOV     A,R7
+0023 C4              416             SWAP    A
+0024 F8              417             MOV     R0,A
+0025 540F            418             ANL     A,#0FH
+0027 C8              419             XCH     A,R0
+0028 68              420             XRL     A,R0
+0029 FF              421             MOV     R7,A
+002A EE              422             MOV     A,R6
+002B C4              423             SWAP    A
+002C 54F0            424             ANL     A,#0F0H
+002E 48              425             ORL     A,R0
+002F FE              426             MOV     R6,A
+0030 EF              427             MOV     A,R7
+0031 2B              428             ADD     A,R3
+0032 FF              429             MOV     R7,A
+0033 EE              430             MOV     A,R6
+0034 3A              431             ADDC    A,R2
+0035 FE              432             MOV     R6,A
+0036 7C00            433             MOV     R4,#00H
+0038 7D0C            434             MOV     R5,#0CH
+003A 120000   F      435             LCALL   ?C?IMUL
+003D E500     F      436             MOV     A,chip?040+01H
+003F 2F              437             ADD     A,R7
+0040 F500     F      438             MOV     complicate+01H,A
+0042 E500     F      439             MOV     A,chip?040
+0044 3E              440             ADDC    A,R6
+0045 F500     F      441             MOV     complicate,A
+                     442     ; }
+                     443                             ; SOURCE LINE # 49
+0047 22              444             RET     
+                     445     ; END OF address
+                     446     
+                     447     ;  
+                     448     ; 
+                     449     ;                                      //  0    1    2    3    4    5    6    7    8    9  
+                               - 
+                     450     ; const unsigned char code numbers[16]= {0xfc,0x60,0xda,0xf2,0x66,0xb6,0xbe,0xe0,0xfe,0xf6,
+                             0x02,0x00,0x00,0x00,0x00};
+                     451     ; 
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     8
+
+                     452     ; 
+                     453     ; extern union my_data idata my_data;
+                     454     ; 
+                     455     ; void ptr(char c) //c ->PBBXNNNN POINT,BRIGHTNESS,NUMBER
+                     456     
+----                 457             RSEG  ?PR?_ptr?MBI
+0000                 458     _ptr:
+                     459             USING   0
+                     460                             ; SOURCE LINE # 58
+                     461     ;---- Variable 'c?143' assigned to Register 'R7' ----
+                     462     ;  {
+                     463                             ; SOURCE LINE # 59
+                     464     ;         unsigned char d,k;
+                     465     ;     d=numbers[c&0x0f];
+                     466                             ; SOURCE LINE # 61
+0000 EF              467             MOV     A,R7
+0001 540F            468             ANL     A,#0FH
+0003 FD              469             MOV     R5,A
+0004 33              470             RLC     A
+0005 95E0            471             SUBB    A,ACC
+0007 FC              472             MOV     R4,A
+0008 7400     F      473             MOV     A,#LOW (numbers)
+000A 2D              474             ADD     A,R5
+000B F582            475             MOV     DPL,A
+000D 7400     F      476             MOV     A,#HIGH (numbers)
+000F 3C              477             ADDC    A,R4
+0010 F583            478             MOV     DPH,A
+0012 E4              479             CLR     A
+0013 93              480             MOVC    A,@A+DPTR
+                     481     ;---- Variable 'd?144' assigned to Register 'R1' ----
+0014 F9              482             MOV     R1,A
+                     483     ;         if (c&0x80) 
+                     484                             ; SOURCE LINE # 62
+0015 EF              485             MOV     A,R7
+0016 30E703          486             JNB     ACC.7,?C0004
+                     487     ;                       d|=0x1; //add a point
+                     488                             ; SOURCE LINE # 63
+0019 430101          489             ORL     AR1,#01H
+001C                 490     ?C0004:
+                     491     ;               k=my_data.dat.bright[(c>>4)&0x3];
+                     492                             ; SOURCE LINE # 64
+001C EF              493             MOV     A,R7
+001D 7804            494             MOV     R0,#04H
+001F                 495     ?C0017:
+001F A2E7            496             MOV     C,ACC.7
+0021 13              497             RRC     A
+0022 D8FB            498             DJNZ    R0,?C0017
+0024 5403            499             ANL     A,#03H
+0026 2400     F      500             ADD     A,#LOW (my_data)
+0028 F8              501             MOV     R0,A
+0029 E6              502             MOV     A,@R0
+002A F500     F      503             MOV     k?145,A
+                     504     ;         for (complicate.segment=0;complicate.segment<8;complicate.segment++)
+                     505                             ; SOURCE LINE # 65
+002C E4              506             CLR     A
+002D F500     F      507             MOV     complicate+04H,A
+002F                 508     ?C0005:
+                     509     ;          {                     
+                     510                             ; SOURCE LINE # 66
+                     511     ;                        address();
+                     512                             ; SOURCE LINE # 67
+002F 120000   F      513             LCALL   address
+                     514     ;                        if ((d&0x80)!=0)
+                     515                             ; SOURCE LINE # 68
+0032 E9              516             MOV     A,R1
+0033 30E708          517             JNB     ACC.7,?C0008
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE     9
+
+                     518     ;                                screen[complicate.address]=k;
+                     519                             ; SOURCE LINE # 69
+0036 120000   F      520             LCALL   L?0020
+0039 E500     F      521             MOV     A,k?145
+003B F0              522             MOVX    @DPTR,A
+003C 8005            523             SJMP    ?C0009
+003E                 524     ?C0008:
+                     525     ;                        else
+                     526     ;                                screen[complicate.address]=0;
+                     527                             ; SOURCE LINE # 71
+003E 120000   F      528             LCALL   L?0020
+0041 E4              529             CLR     A
+0042 F0              530             MOVX    @DPTR,A
+0043                 531     ?C0009:
+                     532     ;                        d<<=1;
+                     533                             ; SOURCE LINE # 72
+0043 E9              534             MOV     A,R1
+0044 25E0            535             ADD     A,ACC
+0046 F9              536             MOV     R1,A
+                     537     ;          }
+                     538                             ; SOURCE LINE # 73
+0047 0500     F      539             INC     complicate+04H
+0049 E500     F      540             MOV     A,complicate+04H
+004B C3              541             CLR     C
+004C 9408            542             SUBB    A,#08H
+004E 40DF            543             JC      ?C0005
+0050                 544     ?C0006:
+                     545     ;                complicate.column++;
+                     546                             ; SOURCE LINE # 74
+0050 0500     F      547             INC     complicate+02H
+                     548     ;          if (complicate.column>=6)
+                     549                             ; SOURCE LINE # 75
+0052 E500     F      550             MOV     A,complicate+02H
+0054 C3              551             CLR     C
+0055 9406            552             SUBB    A,#06H
+0057 4012            553             JC      ?C0012
+                     554     ;                {
+                     555                             ; SOURCE LINE # 76
+                     556     ;                        complicate.column-=6;
+                     557                             ; SOURCE LINE # 77
+0059 74FA            558             MOV     A,#0FAH
+005B 2500     F      559             ADD     A,complicate+02H
+005D F500     F      560             MOV     complicate+02H,A
+                     561     ;                        if (++complicate.row>=NUM_OF_MBI)
+                     562                             ; SOURCE LINE # 78
+005F 0500     F      563             INC     complicate+03H
+0061 E500     F      564             MOV     A,complicate+03H
+0063 C3              565             CLR     C
+0064 940C            566             SUBB    A,#0CH
+0066 4003            567             JC      ?C0012
+                     568     ;                                complicate.row=0;
+                     569                             ; SOURCE LINE # 79
+0068 E4              570             CLR     A
+0069 F500     F      571             MOV     complicate+03H,A
+                     572     ;                                 
+                     573     ;                }
+                     574                             ; SOURCE LINE # 81
+                     575     ;                return;
+                     576     ;  }                       
+                     577                             ; SOURCE LINE # 83
+006B                 578     ?C0012:
+006B 22              579             RET     
+                     580     ; END OF _ptr
+                     581     
+                     582     ; 
+                     583     ; void gotoxy(unsigned char x,unsigned char y)
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE    10
+
+                     584     
+----                 585             RSEG  ?PR?_gotoxy?MBI
+0000                 586     _gotoxy:
+                     587                             ; SOURCE LINE # 85
+                     588     ;---- Variable 'y?247' assigned to Register 'R5' ----
+                     589     ;---- Variable 'x?246' assigned to Register 'R7' ----
+                     590     ;  {
+                     591                             ; SOURCE LINE # 86
+                     592     ;        complicate.column=x;
+                     593                             ; SOURCE LINE # 87
+0000 8F00     F      594             MOV     complicate+02H,R7
+                     595     ;        complicate.row=y;
+                     596                             ; SOURCE LINE # 88
+0002 8D00     F      597             MOV     complicate+03H,R5
+                     598     ;  }
+                     599                             ; SOURCE LINE # 89
+0004 22              600             RET     
+                     601     ; END OF _gotoxy
+                     602     
+                     603     ;  
+                     604     ; void SetPoint(unsigned char b,bit sr) //Set the two led's for the clock
+                     605     
+----                 606             RSEG  ?PR?_SetPoint?MBI
+0000                 607     _SetPoint:
+                     608             USING   0
+                     609                             ; SOURCE LINE # 91
+                     610     ;---- Variable 'b?348' assigned to Register 'R7' ----
+                     611     ;  {
+                     612                             ; SOURCE LINE # 92
+                     613     ;        if (sr)
+                     614                             ; SOURCE LINE # 93
+0000 300013   F      615             JNB     sr?349,?C0014
+                     616     ;         {
+                     617                             ; SOURCE LINE # 94
+                     618     ;                screen[16*NUM_OF_MBI+15*NUM_OF_MBI+1]=my_data.dat.bright[b]; //set G2
+                     619                             ; SOURCE LINE # 95
+0003 7400     F      620             MOV     A,#LOW (my_data)
+0005 2F              621             ADD     A,R7
+0006 F8              622             MOV     R0,A
+0007 E6              623             MOV     A,@R0
+0008 900255          624             MOV     DPTR,#screen+0175H
+000B F0              625             MOVX    @DPTR,A
+                     626     ;                screen[16*NUM_OF_MBI+ 7*NUM_OF_MBI+1]=my_data.dat.bright[b]; //set A2     
+                                   
+                     627                             ; SOURCE LINE # 96
+000C 7400     F      628             MOV     A,#LOW (my_data)
+000E 2F              629             ADD     A,R7
+000F F8              630             MOV     R0,A
+0010 E6              631             MOV     A,@R0
+0011 9001F5          632             MOV     DPTR,#screen+0115H
+0014 F0              633             MOVX    @DPTR,A
+                     634     ;         }
+                     635                             ; SOURCE LINE # 97
+0015 22              636             RET     
+0016                 637     ?C0014:
+                     638     ;        else
+                     639     ;         {
+                     640                             ; SOURCE LINE # 99
+                     641     ;                screen[16*NUM_OF_MBI+15*NUM_OF_MBI+1]=0; //set G2
+                     642                             ; SOURCE LINE # 100
+0016 E4              643             CLR     A
+0017 900255          644             MOV     DPTR,#screen+0175H
+001A F0              645             MOVX    @DPTR,A
+                     646     ;                screen[16*NUM_OF_MBI+ 7*NUM_OF_MBI+1]=0; //set A2               
+                     647                             ; SOURCE LINE # 101
+001B 9001F5          648             MOV     DPTR,#screen+0115H
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE    11
+
+001E F0              649             MOVX    @DPTR,A
+                     650     ;         }              
+                     651                             ; SOURCE LINE # 102
+                     652     ;  }
+                     653                             ; SOURCE LINE # 103
+001F                 654     ?C0016:
+001F 22              655             RET     
+                     656     ; END OF _SetPoint
+                     657     
+                     658             END
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE    12
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+?ADDRESS?BYTE. . .  D ADDR   0000H   R   SEG=?DT?ADDRESS?MBI
+?BI?_SETPOINT?MBI.  B SEG    0001H       REL=UNIT
+?C0001 . . . . . .  C ADDR   0019H   R   SEG=?PR?ADDRESS?MBI
+?C0002 . . . . . .  C ADDR   0022H   R   SEG=?PR?ADDRESS?MBI
+?C0004 . . . . . .  C ADDR   001CH   R   SEG=?PR?_PTR?MBI
+?C0005 . . . . . .  C ADDR   002FH   R   SEG=?PR?_PTR?MBI
+?C0006 . . . . . .  C ADDR   0050H   R   SEG=?PR?_PTR?MBI
+?C0008 . . . . . .  C ADDR   003EH   R   SEG=?PR?_PTR?MBI
+?C0009 . . . . . .  C ADDR   0043H   R   SEG=?PR?_PTR?MBI
+?C0012 . . . . . .  C ADDR   006BH   R   SEG=?PR?_PTR?MBI
+?C0014 . . . . . .  C ADDR   0016H   R   SEG=?PR?_SETPOINT?MBI
+?C0016 . . . . . .  C ADDR   001FH   R   SEG=?PR?_SETPOINT?MBI
+?C0017 . . . . . .  C ADDR   001FH   R   SEG=?PR?_PTR?MBI
+?C0018 . . . . . .  C ADDR   001EH   R   SEG=?PR?ADDRESS?MBI
+?C?IMUL. . . . . .  C ADDR   -----       EXT
+?CO?MBI. . . . . .  C SEG    0020H       REL=UNIT
+?DT?ADDRESS?MBI. .  D SEG    0002H       REL=UNIT
+?DT?MBI. . . . . .  D SEG    0005H       REL=UNIT
+?DT?_PTR?MBI . . .  D SEG    0001H       REL=UNIT
+?PR?ADDRESS?MBI. .  C SEG    0048H       REL=INBLOCK
+?PR?MBI. . . . . .  C SEG    000DH       REL=INBLOCK
+?PR?_GOTOXY?MBI. .  C SEG    0005H       REL=INBLOCK
+?PR?_PTR?MBI . . .  C SEG    006CH       REL=INBLOCK
+?PR?_SETPOINT?MBI.  C SEG    0020H       REL=INBLOCK
+?_PTR?BYTE . . . .  D ADDR   0000H   R   SEG=?DT?_PTR?MBI
+?_SETPOINT?BIT . .  B ADDR   0000H.0 R   SEG=?BI?_SETPOINT?MBI
+AC . . . . . . . .  B ADDR   00D0H.6 A   
+ACC. . . . . . . .  D ADDR   00E0H   A   
+ACK. . . . . . . .  B ADDR   00C0H.1 A   
+ACKRQ. . . . . . .  B ADDR   00C0H.3 A   
+AD0BUSY. . . . . .  B ADDR   00E8H.4 A   
+AD0CM0 . . . . . .  B ADDR   00E8H.0 A   
+AD0CM1 . . . . . .  B ADDR   00E8H.1 A   
+AD0EN. . . . . . .  B ADDR   00E8H.7 A   
+AD0INT . . . . . .  B ADDR   00E8H.5 A   
+AD0LJST. . . . . .  B ADDR   00E8H.2 A   
+AD0WINT. . . . . .  B ADDR   00E8H.3 A   
+ADC0 . . . . . . .  D ADDR   00BDH   A   
+ADC0CF . . . . . .  D ADDR   00BCH   A   
+ADC0CN . . . . . .  D ADDR   00E8H   A   
+ADC0GT . . . . . .  D ADDR   00C3H   A   
+ADC0GTH. . . . . .  D ADDR   00C4H   A   
+ADC0GTL. . . . . .  D ADDR   00C3H   A   
+ADC0H. . . . . . .  D ADDR   00BEH   A   
+ADC0L. . . . . . .  D ADDR   00BDH   A   
+ADC0LT . . . . . .  D ADDR   00C5H   A   
+ADC0LTH. . . . . .  D ADDR   00C6H   A   
+ADC0LTL. . . . . .  D ADDR   00C5H   A   
+ADC0MX . . . . . .  D ADDR   00BBH   A   
+ADC0TK . . . . . .  D ADDR   00BAH   A   
+ADDRESS. . . . . .  C ADDR   0000H   R   SEG=?PR?ADDRESS?MBI
+AR1. . . . . . . .  D ADDR   0001H   A   
+ARBLOST. . . . . .  B ADDR   00C0H.2 A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+BURSTEN. . . . . .  B ADDR   00E8H.6 A   
+CCF0 . . . . . . .  B ADDR   00D8H.0 A   
+CCF1 . . . . . . .  B ADDR   00D8H.1 A   
+CCF2 . . . . . . .  B ADDR   00D8H.2 A   
+CCF3 . . . . . . .  B ADDR   00D8H.3 A   
+CCF4 . . . . . . .  B ADDR   00D8H.4 A   
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE    13
+
+CCF5 . . . . . . .  B ADDR   00D8H.5 A   
+CE24L01. . . . . .  B ADDR   0090H.3 A   
+CF . . . . . . . .  B ADDR   00D8H.7 A   
+CHIP?040 . . . . .  D ADDR   0000H   R   SEG=?DT?ADDRESS?MBI
+CKCON. . . . . . .  D ADDR   008EH   A   
+CLKMUL . . . . . .  D ADDR   00ABH   A   
+CLKSEL . . . . . .  D ADDR   00A9H   A   
+COM0013. . . . . .  C ADDR   0000H   R   SEG=?PR?MBI
+COMPLICATE . . . .  D ADDR   0000H   R   SEG=?DT?MBI
+CPT0CN . . . . . .  D ADDR   009BH   A   
+CPT0MD . . . . . .  D ADDR   009DH   A   
+CPT0MX . . . . . .  D ADDR   009FH   A   
+CPT1CN . . . . . .  D ADDR   009AH   A   
+CPT1MD . . . . . .  D ADDR   009CH   A   
+CPT1MX . . . . . .  D ADDR   009EH   A   
+CR . . . . . . . .  B ADDR   00D8H.6 A   
+CRC0CN . . . . . .  D ADDR   0084H   A   
+CRC0DAT. . . . . .  D ADDR   0086H   A   
+CRC0FLIP . . . . .  D ADDR   00DFH   A   
+CRC0IN . . . . . .  D ADDR   0085H   A   
+CS1. . . . . . . .  C ADDR   0000H   R   SEG=?CO?MBI
+CS2. . . . . . . .  C ADDR   0008H   R   SEG=?CO?MBI
+CSN24L01 . . . . .  B ADDR   0090H.6 A   
+CY . . . . . . . .  B ADDR   00D0H.7 A   
+DCLK . . . . . . .  B ADDR   0080H.2 A   
+DP . . . . . . . .  D ADDR   0082H   A   
+DPH. . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . .  D ADDR   0082H   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+EIE1 . . . . . . .  D ADDR   00E6H   A   
+EIE2 . . . . . . .  D ADDR   00E7H   A   
+EIP1 . . . . . . .  D ADDR   00F6H   A   
+EIP2 . . . . . . .  D ADDR   00F7H   A   
+EMI0CN . . . . . .  D ADDR   00AAH   A   
+ES0. . . . . . . .  B ADDR   00A8H.4 A   
+ESPI0. . . . . . .  B ADDR   00A8H.6 A   
+ET0. . . . . . . .  B ADDR   00A8H.1 A   
+ET1. . . . . . . .  B ADDR   00A8H.3 A   
+ET2. . . . . . . .  B ADDR   00A8H.5 A   
+EX0. . . . . . . .  B ADDR   00A8H.0 A   
+EX1. . . . . . . .  B ADDR   00A8H.2 A   
+F0 . . . . . . . .  B ADDR   00D0H.5 A   
+F1 . . . . . . . .  B ADDR   00D0H.1 A   
+FLKEY. . . . . . .  D ADDR   00B7H   A   
+FLSCL. . . . . . .  D ADDR   00B6H   A   
+IDA0 . . . . . . .  D ADDR   0096H   A   
+IDA0CN . . . . . .  D ADDR   00B9H   A   
+IDA0H. . . . . . .  D ADDR   0097H   A   
+IDA0L. . . . . . .  D ADDR   0096H   A   
+IDA1 . . . . . . .  D ADDR   00F4H   A   
+IDA1CN . . . . . .  D ADDR   00B5H   A   
+IDA1H. . . . . . .  D ADDR   00F5H   A   
+IDA1L. . . . . . .  D ADDR   00F4H   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+IE0. . . . . . . .  B ADDR   0088H.1 A   
+IE1. . . . . . . .  B ADDR   0088H.3 A   
+IP . . . . . . . .  D ADDR   00B8H   A   
+IT0. . . . . . . .  B ADDR   0088H.0 A   
+IT01CF . . . . . .  D ADDR   00E4H   A   
+IT1. . . . . . . .  B ADDR   0088H.2 A   
+K?145. . . . . . .  D ADDR   0000H   R   SEG=?DT?_PTR?MBI
+L?0020 . . . . . .  C ADDR   0000H   R   SEG=?PR?MBI
+LED. . . . . . . .  B ADDR   0090H.2 A   
+MASTER . . . . . .  B ADDR   00C0H.7 A   
+MBI. . . . . . . .  N NUMB   -----       
+MBILE. . . . . . .  B ADDR   00A0H.4 A   
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE    14
+
+MCE0 . . . . . . .  B ADDR   0098H.5 A   
+MODF . . . . . . .  B ADDR   00F8H.5 A   
+MY_DATA. . . . . .  I ADDR   -----       EXT
+NSSMD0 . . . . . .  B ADDR   00F8H.2 A   
+NSSMD1 . . . . . .  B ADDR   00F8H.3 A   
+NUMBERS. . . . . .  C ADDR   0010H   R   SEG=?CO?MBI
+ONESHOT. . . . . .  D ADDR   00AFH   A   
+OSCICL . . . . . .  D ADDR   00B3H   A   
+OSCICN . . . . . .  D ADDR   00B2H   A   
+OSCXCN . . . . . .  D ADDR   00B1H   A   
+OV . . . . . . . .  B ADDR   00D0H.2 A   
+P. . . . . . . . .  B ADDR   00D0H.0 A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P0MASK . . . . . .  D ADDR   00C7H   A   
+P0MAT. . . . . . .  D ADDR   00D7H   A   
+P0MDIN . . . . . .  D ADDR   00F1H   A   
+P0MDOUT. . . . . .  D ADDR   00A4H   A   
+P0ODEN . . . . . .  D ADDR   00B0H   A   
+P0SKIP . . . . . .  D ADDR   00D4H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P1MASK . . . . . .  D ADDR   00BFH   A   
+P1MAT. . . . . . .  D ADDR   00CFH   A   
+P1MDIN . . . . . .  D ADDR   00F2H   A   
+P1MDOUT. . . . . .  D ADDR   00A5H   A   
+P1SKIP . . . . . .  D ADDR   00D5H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P2MDIN . . . . . .  D ADDR   00F3H   A   
+P2MDOUT. . . . . .  D ADDR   00A6H   A   
+P2SKIP . . . . . .  D ADDR   00D6H   A   
+PCA0 . . . . . . .  D ADDR   00F9H   A   
+PCA0CN . . . . . .  D ADDR   00D8H   A   
+PCA0CP0. . . . . .  D ADDR   00FBH   A   
+PCA0CP1. . . . . .  D ADDR   00E9H   A   
+PCA0CP2. . . . . .  D ADDR   00EBH   A   
+PCA0CP3. . . . . .  D ADDR   00EDH   A   
+PCA0CP4. . . . . .  D ADDR   00FDH   A   
+PCA0CP5. . . . . .  D ADDR   00D2H   A   
+PCA0CPH0 . . . . .  D ADDR   00FCH   A   
+PCA0CPH1 . . . . .  D ADDR   00EAH   A   
+PCA0CPH2 . . . . .  D ADDR   00ECH   A   
+PCA0CPH3 . . . . .  D ADDR   00EEH   A   
+PCA0CPH4 . . . . .  D ADDR   00FEH   A   
+PCA0CPH5 . . . . .  D ADDR   00D3H   A   
+PCA0CPL0 . . . . .  D ADDR   00FBH   A   
+PCA0CPL1 . . . . .  D ADDR   00E9H   A   
+PCA0CPL2 . . . . .  D ADDR   00EBH   A   
+PCA0CPL3 . . . . .  D ADDR   00EDH   A   
+PCA0CPL4 . . . . .  D ADDR   00FDH   A   
+PCA0CPL5 . . . . .  D ADDR   00D2H   A   
+PCA0CPM0 . . . . .  D ADDR   00DAH   A   
+PCA0CPM1 . . . . .  D ADDR   00DBH   A   
+PCA0CPM2 . . . . .  D ADDR   00DCH   A   
+PCA0CPM3 . . . . .  D ADDR   00DDH   A   
+PCA0CPM4 . . . . .  D ADDR   00DEH   A   
+PCA0CPM5 . . . . .  D ADDR   00CEH   A   
+PCA0H. . . . . . .  D ADDR   00FAH   A   
+PCA0L. . . . . . .  D ADDR   00F9H   A   
+PCA0MD . . . . . .  D ADDR   00D9H   A   
+PCON . . . . . . .  D ADDR   0087H   A   
+PFE0CN . . . . . .  D ADDR   00E3H   A   
+PS0. . . . . . . .  B ADDR   00B8H.4 A   
+PSCTL. . . . . . .  D ADDR   008FH   A   
+PSPI0. . . . . . .  B ADDR   00B8H.6 A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+PT0. . . . . . . .  B ADDR   00B8H.1 A   
+PT1. . . . . . . .  B ADDR   00B8H.3 A   
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE    15
+
+PT2. . . . . . . .  B ADDR   00B8H.5 A   
+PX0. . . . . . . .  B ADDR   00B8H.0 A   
+PX1. . . . . . . .  B ADDR   00B8H.2 A   
+RB80 . . . . . . .  B ADDR   0098H.2 A   
+REF0CN . . . . . .  D ADDR   00D1H   A   
+REG0CN . . . . . .  D ADDR   00C9H   A   
+REN0 . . . . . . .  B ADDR   0098H.4 A   
+RI0. . . . . . . .  B ADDR   0098H.0 A   
+RS0. . . . . . . .  B ADDR   00D0H.3 A   
+RS1. . . . . . . .  B ADDR   00D0H.4 A   
+RSTSRC . . . . . .  D ADDR   00EFH   A   
+RTC0ADR. . . . . .  D ADDR   00ACH   A   
+RTC0DAT. . . . . .  D ADDR   00ADH   A   
+RTC0KEY. . . . . .  D ADDR   00AEH   A   
+RXOVRN . . . . . .  B ADDR   00F8H.4 A   
+S0MODE . . . . . .  B ADDR   0098H.7 A   
+SBUF0. . . . . . .  D ADDR   0099H   A   
+SCON0. . . . . . .  D ADDR   0098H   A   
+SCREEN . . . . . .  X ADDR   00E0H   A   
+SDI. . . . . . . .  B ADDR   0080H.6 A   
+SDO. . . . . . . .  B ADDR   0080H.3 A   
+SEL0 . . . . . . .  B ADDR   00A0H.5 A   
+SEL1 . . . . . . .  B ADDR   00A0H.6 A   
+SI . . . . . . . .  B ADDR   00C0H.0 A   
+SMB0CF . . . . . .  D ADDR   00C1H   A   
+SMB0CN . . . . . .  D ADDR   00C0H   A   
+SMB0DAT. . . . . .  D ADDR   00C2H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+SPI0CFG. . . . . .  D ADDR   00A1H   A   
+SPI0CKR. . . . . .  D ADDR   00A2H   A   
+SPI0CN . . . . . .  D ADDR   00F8H   A   
+SPI0DAT. . . . . .  D ADDR   00A3H   A   
+SPIEN. . . . . . .  B ADDR   00F8H.0 A   
+SPIF . . . . . . .  B ADDR   00F8H.7 A   
+SR?349 . . . . . .  B ADDR   0000H.0 R   SEG=?BI?_SETPOINT?MBI
+STA. . . . . . . .  B ADDR   00C0H.5 A   
+STO. . . . . . . .  B ADDR   00C0H.4 A   
+T2RCLK . . . . . .  B ADDR   00C8H.1 A   
+T2SPLIT. . . . . .  B ADDR   00C8H.3 A   
+T2XCLK . . . . . .  B ADDR   00C8H.0 A   
+TB80 . . . . . . .  B ADDR   0098H.3 A   
+TCON . . . . . . .  D ADDR   0088H   A   
+TF0. . . . . . . .  B ADDR   0088H.5 A   
+TF1. . . . . . . .  B ADDR   0088H.7 A   
+TF2CEN . . . . . .  B ADDR   00C8H.4 A   
+TF2H . . . . . . .  B ADDR   00C8H.7 A   
+TF2L . . . . . . .  B ADDR   00C8H.6 A   
+TF2LEN . . . . . .  B ADDR   00C8H.5 A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI0. . . . . . . .  B ADDR   0098H.1 A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TMR2 . . . . . . .  D ADDR   00CCH   A   
+TMR2CN . . . . . .  D ADDR   00C8H   A   
+TMR2H. . . . . . .  D ADDR   00CDH   A   
+TMR2L. . . . . . .  D ADDR   00CCH   A   
+TMR2RL . . . . . .  D ADDR   00CAH   A   
+TMR2RLH. . . . . .  D ADDR   00CBH   A   
+TMR2RLL. . . . . .  D ADDR   00CAH   A   
+TMR3 . . . . . . .  D ADDR   0094H   A   
+TMR3CN . . . . . .  D ADDR   0091H   A   
+TMR3H. . . . . . .  D ADDR   0095H   A   
+TMR3L. . . . . . .  D ADDR   0094H   A   
+TMR3RL . . . . . .  D ADDR   0092H   A   
+A51 MACRO ASSEMBLER  MBI                                                                  02/28/2018 16:44:47 PAGE    16
+
+TMR3RLH. . . . . .  D ADDR   0093H   A   
+TMR3RLL. . . . . .  D ADDR   0092H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+TR2. . . . . . . .  B ADDR   00C8H.2 A   
+TXBMT. . . . . . .  B ADDR   00F8H.1 A   
+TXMODE . . . . . .  B ADDR   00C0H.6 A   
+VDM0CN . . . . . .  D ADDR   00FFH   A   
+WCOL . . . . . . .  B ADDR   00F8H.6 A   
+XBR0 . . . . . . .  D ADDR   00E1H   A   
+XBR1 . . . . . . .  D ADDR   00E2H   A   
+_GOTOXY. . . . . .  C ADDR   0000H   R   SEG=?PR?_GOTOXY?MBI
+_PTR . . . . . . .  C ADDR   0000H   R   SEG=?PR?_PTR?MBI
+_SETPOINT. . . . .  C ADDR   0000H   R   SEG=?PR?_SETPOINT?MBI
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

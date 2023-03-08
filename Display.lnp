@@ -1,0 +1,12 @@
+"STARTUP.obj",
+"display_slot_init.obj",
+"displplay_slot_main.obj",
+"rtc.obj",
+"MBI.obj",
+"EspAT.obj",
+"i2c.obj" 
+TO "DisplayRoulette" REGFILE (.\DisplayRoulette.ORC) 
+RAMSIZE(256) 
+CODE( 0X0000-0X7FFF )
+XDATA( 0X0000-0X07FF )
+PDATA( 0x0 )

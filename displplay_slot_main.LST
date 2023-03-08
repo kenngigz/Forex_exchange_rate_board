@@ -1,0 +1,822 @@
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 1   
+
+
+C51 COMPILER V9.55, COMPILATION OF MODULE DISPLPLAY_SLOT_MAIN
+OBJECT MODULE PLACED IN displplay_slot_main.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE displplay_slot_main.c OPTIMIZE(9,SPEED) REGFILE(.\DisplayRoulette.ORC) B
+                    -ROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "display_slot.h"
+   2          #include <intrins.h>
+   3          #include <string.h>
+   4          #include <ctype.h>
+   5          #include <stdio.h>
+   6          
+   7          
+   8          #define ESPINT
+   9          
+  10          bit dir;
+  11          void mbiSend();
+  12          extern unsigned char xdata screen[];
+  13          extern union my_data idata my_data;
+  14          #define BALLS 0
+  15          #define START_TIME  17
+  16          #define FULL_TIME   21
+  17          void ptr(char);
+  18          
+  19          void SetPoint(unsigned char b,bit sr);
+  20          void gotoxy(unsigned char x,unsigned char y);
+  21          void initEps(const char code *tbl[]);
+  22          bit SendToESP (const char *comm,unsigned char answ,unsigned char t); //wait 3 seconds for answer
+  23          extern unsigned char connected,answer,len,cannel;
+  24          extern unsigned char pdata epsBuff[];
+  25          extern unsigned char pdata sndBuff[];
+  26           long t;
+  27           
+  28          const char code  * code command0[]={ //no internet
+  29            "AT\r\n",
+  30            "ATE0\r\n", 
+  31            "AT+CIPMUX=1\r\n",
+  32            "AT\r\n",
+  33            "AT+CIPSERVER=1,333\r\n", 
+  34            "AT+CIPSTO=0\r\n",
+  35            ""
+  36          };
+  37          
+  38          const char code  * code command1[]={ //internet exist
+  39            "AT\r\n",
+  40            "ATE0\r\n",
+  41            "AT+CIPMUX=1\r\n",
+  42            "AT\r\n",
+  43            "AT+CIPSERVER=1,333\r\n", 
+  44            "AT+CIPSTO=0\r\n",  
+  45            ""
+  46          };
+  47          /*
+  48              "AT+CWJAP=\"Mitko-home\",\"mozart13\"\r\n",
+  49              "AT+CWSAP=\"KenForex\",\"1234test\",5,3\r\n",
+  50          */
+  51          const char code  * code command2[]={ //no internet
+  52            "AT\r\n",
+  53            "ATE0\r\n", 
+  54            "AT+CIPMUX=1\r\n",
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 2   
+
+  55            "AT\r\n",
+  56            "AT+CIPSERVER=1,333\r\n", 
+  57            "AT+CIPSTO=0\r\n",
+  58            ""
+  59          };
+  60          
+  61          const char code  * code command3[]={
+  62            "ATE0\r\n",
+  63            "AT+CWMODE=2\r\n",
+  64            //"AT+CWJAP=\"Forex\",\"counti2018\"\r\n",
+  65            "AT+CWSAP=\"Start\",\"\",1,0\r\n",
+  66            //"AT+CWJAP=\"Mitko-home\",\"mozart13\"\r\n",
+  67            //"AT+CWSAP=\"Forex\",\"1234test\",5,3\r\n",
+  68            ""
+  69          };
+  70          
+  71          typedef struct
+  72          {
+  73              unsigned char second; // 0-59
+  74              unsigned char minute; // 0-59
+  75              unsigned char hour;   // 0-23
+  76              unsigned char day;    // 1-31
+  77              unsigned char month;  // 1-12
+  78              unsigned char year;   // 0-99 (representing 2000-2099)
+  79          } date_time_t;
+  80          
+  81          const unsigned code days[4][12] =
+  82          {
+  83              {   0,  31,  60,  91, 121, 152, 182, 213, 244, 274, 305, 335},
+  84              { 366, 397, 425, 456, 486, 517, 547, 578, 609, 639, 670, 700},
+  85              { 731, 762, 790, 821, 851, 882, 912, 943, 974,1004,1035,1065},
+  86              {1096,1127,1155,1186,1216,1247,1277,1308,1339,1369,1400,1430},
+  87          };
+  88          
+  89          
+  90          
+  91          date_time_t tim;
+  92          bit pass_accept;
+  93          char pdata combuff[48]; 
+  94          char pdata helpbuff[48];
+  95          struct currency cc;
+  96          
+  97          void date_time(date_time_t* date_time,unsigned long epoch)
+  98          {
+  99   1          unsigned int years,year,month;
+ 100   1          epoch-=946684800L;
+ 101   1          date_time->second = epoch%60; epoch /= 60;
+ 102   1          date_time->minute = epoch%60; epoch /= 60;
+ 103   1          date_time->hour   = epoch%24; epoch /= 24;
+ 104   1          years = epoch/(365*4+1); epoch %= 365*4+1;
+ 105   1          years*=4;
+ 106   1          for (year=3; year>0; year--)
+ 107   1          {
+ 108   2              if (epoch >= days[year][0])
+ 109   2                  break;
+ 110   2          }
+ 111   1          for (month=11; month>0; month--)
+ 112   1          {
+ 113   2              if (epoch >= days[year][month])
+ 114   2                  break;
+ 115   2          }
+ 116   1      
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 3   
+
+ 117   1          //date_time->year  = years+year+70;
+ 118   1          date_time->year  = years+year;
+ 119   1          date_time->month = month+1;
+ 120   1          date_time->day   = epoch-days[year][month]+1;
+ 121   1      }
+ 122          
+ 123          void  write_time()
+ 124            {
+ 125   1          gotoxy(0,1);
+ 126   1          ptr(tim.hour/10+0x20);
+ 127   1          ptr(tim.hour%10+0x20);
+ 128   1          gotoxy(4,1);
+ 129   1          ptr(tim.minute/10+0x20);
+ 130   1          ptr(tim.minute%10+0x20);
+ 131   1        }
+ 132            
+ 133           void write_date()
+ 134            {
+ 135   1          gotoxy(0,0);
+ 136   1          ptr(tim.day/10+0x20);
+ 137   1          ptr(tim.day%10+0xa0);
+ 138   1          ptr(tim.month/10+0x20);
+ 139   1          ptr(tim.month%10+0xa0);
+ 140   1          ptr((tim.year%100)/10+0x20);
+ 141   1          ptr(tim.year%10+0x20);
+ 142   1        }
+ 143            
+ 144          void time_wait(unsigned char tim)
+ 145          {
+ 146   1       t=rtc_readTime();
+ 147   1       t+=tim;
+ 148   1       while (t!=rtc_readTime())
+ 149   1         WATCHDOG;
+ 150   1      } 
+ 151          
+ 152          void prnval(unsigned char v)
+ 153           {
+ 154   1         unsigned char p,i,j;
+ 155   1         
+ 156   1         i=v*sizeof(struct currency);
+ 157   1         WriteI2C(EEADDR,&i,1);
+ 158   1         ReadI2C(EEADDR,(char *) &cc,sizeof(struct currency));
+ 159   1         p=cc.point;
+ 160   1         if (v>=NUMOFCUR)
+ 161   1           v=0x10;
+ 162   1         else
+ 163   1           v=0;
+ 164   1         for (i=0;i<3;i++)
+ 165   1         {
+ 166   2           j=cc.vals[i];
+ 167   2           if ((p&1)==0)
+ 168   2             ptr((j>>4)&0xf+v);
+ 169   2           else
+ 170   2             ptr(((j>>4)&0x0f)|0x80+v);
+ 171   2           p>>=1;
+ 172   2           if ((p&1)==0)
+ 173   2             ptr(j&0xf+v);
+ 174   2           else
+ 175   2             ptr((j&0x0f)|0x80+v);  
+ 176   2           p>>=1;    
+ 177   2         }
+ 178   1       }
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 4   
+
+ 179           
+ 180          void asciival(unsigned char v,char *k)
+ 181           {
+ 182   1         unsigned char p,i,j;
+ 183   1         while (*k!=0)
+ 184   1           k++;
+ 185   1         v*=sizeof(struct currency);
+ 186   1         WriteI2C(EEADDR,&v,1);
+ 187   1         ReadI2C(EEADDR,(char *) &cc,sizeof(struct currency));
+ 188   1         p=cc.point;
+ 189   1         for (i=0;i<3;i++)
+ 190   1         {
+ 191   2           j=cc.vals[i];
+ 192   2           *k=((j>>4)&0xf)+'0';
+ 193   2           if (*k>'9')
+ 194   2             *k=(*k==':')?'-':' ';
+ 195   2           k++;
+ 196   2           if ((p&1)!=0)
+ 197   2             *k++='.';
+ 198   2           p>>=1;
+ 199   2           *k=(j&0xf)+'0';
+ 200   2           if (*k>'9')
+ 201   2             *k=(*k==':')?'-':' ';
+ 202   2           k++;
+ 203   2           if ((p&1)!=0)
+ 204   2             *k++='.';
+ 205   2           p>>=1;    
+ 206   2         }   
+ 207   1         *k=0;
+ 208   1       }
+ 209          
+ 210          void itoa(unsigned char value,char *desitination)
+ 211          {
+ 212   1      while(*desitination)
+ 213   1        desitination++;
+ 214   1        desitination[0] = '0';
+ 215   1        desitination[1] = '0';
+ 216   1        desitination[3] = '\0';//you at least 4 char array, last char is NULL
+ 217   1        while (value >= 100)
+ 218   1        {
+ 219   2          desitination[0]++;
+ 220   2          value -= 100;
+ 221   2        }
+ 222   1        while (value >= 10)
+ 223   1        {
+ 224   2           desitination[1]++;
+ 225   2           value -= 10;
+ 226   2        }
+ 227   1        value+= '0';
+ 228   1        desitination[2] =value;
+ 229   1      }
+ 230          
+ 231          bit printto(unsigned char *str,unsigned char can)
+ 232          {
+ 233   1          char xdata hlpbuff[32]; 
+ 234   1        
+ 235   1          strcpy(hlpbuff,"AT+CIPSEND=");
+ 236   1          strncat(hlpbuff,(char *) &can,1);
+ 237   1          strcat(hlpbuff,",");                
+ 238   1          itoa(strlen(str),hlpbuff);
+ 239   1          strcat(hlpbuff,"\r\n");
+ 240   1          if (SendToESP(hlpbuff,255,8))   //wait 8 seconds for connectinp
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 5   
+
+ 241   1           {  
+ 242   2               if (SendToESP( str,14,8))   //wait 5 seconds for directly wait for time
+ 243   2                 return 1;
+ 244   2           }
+ 245   1          return 0;
+ 246   1      }
+ 247          
+ 248          
+ 249          unsigned char com_stat;
+ 250          //communication status
+ 251          // 0 - wait HI! or password
+ 252          
+ 253          void main() 
+ 254          {
+ 255   1      
+ 256   1        int i; 
+ 257   1        unsigned char j,k;  
+ 258   1        Init_Device();
+ 259   1        SPI0CKR   = SIOSPD; //set the speed of sio
+ 260   1        WATCHDOG; 
+ 261   1        rtc_init();
+ 262   1        WATCHDOG;
+ 263   1        sel0=0;
+ 264   1        sel1=0;
+ 265   1        for (i=0;i<(NUM_OF_MBI*NUM_OF_COLUMNS*16);i++)
+ 266   1         screen[i]=0x0;
+ 267   1      
+ 268   1      
+ 269   1        ESPI0=1;
+ 270   1        SPIF=1;
+ 271   1      //-----------------------------------------------
+ 272   1      // I2C
+ 273   1       WATCHDOG;
+ 274   1       init_i2c();
+ 275   1      /*
+ 276   1       my_data.rtc_ram[0]=22;
+ 277   1       my_data.rtc_ram[1]=0x41;
+ 278   1       my_data.rtc_ram[2]=0x92;
+ 279   1       my_data.rtc_ram[3]=0x14;
+ 280   1       my_data.rtc_ram[4]=0x25;
+ 281   1       WriteI2C(EEADDR,my_data.rtc_ram,5);
+ 282   1       my_data.rtc_ram[0]=22;
+ 283   1       WriteI2C(EEADDR,my_data.rtc_ram,1);
+ 284   1       WATCHDOG;
+ 285   1       ReadI2C(EEADDR,my_data.rtc_ram,2);
+ 286   1       while (ESPI0)
+ 287   1         WATCHDOG;
+ 288   1       */
+ 289   1      //------------------------------------------------  
+ 290   1        TR2=1; //start timer 2 to 800Hz
+ 291   1        //if (TR2||(!rtc_readram()))
+ 292   1        if (!rtc_readram())
+ 293   1        {
+ 294   2           //crc is not good
+ 295   2           WATCHDOG;
+ 296   2           my_data.dat.bright[0]=0x60;
+ 297   2           my_data.dat.bright[1]=0x40;
+ 298   2           my_data.dat.bright[2]=0x40;
+ 299   2           my_data.dat.bright[3]=0x10;
+ 300   2           strcpy(my_data.dat.pass,"boss");
+ 301   2           my_data.dat.syntime=0;
+ 302   2           my_data.dat.mode=3;
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 6   
+
+ 303   2           WATCHDOG;
+ 304   2        //   memset (my_data.dat.currency,0,NUMOFCUR*2*sizeof(struct currency));
+ 305   2      
+ 306   2          rtc_writeram();   
+ 307   2          rtc_writeTime(0);
+ 308   2          WATCHDOG;
+ 309   2          rtc_writeram();
+ 310   2        }
+ 311   1      
+ 312   1      time_wait(3); //whait two second for start
+ 313   1      //my_data.dat.mode=1;
+ 314   1      switch (my_data.dat.mode)
+ 315   1      { 
+ 316   2        case 0:
+ 317   2            gotoxy(0,2);
+ 318   2            ptr(0);
+ 319   2            initEps(command0);
+ 320   2          break;
+ 321   2        
+ 322   2        case 1:  //sta mode 
+ 323   2          if (SendToESP(  "AT+RST\r\n",12,15))   //wait for got IP
+ 324   2           {
+ 325   3             initEps(command1);
+ 326   3            if (SendToESP(  "AT+CIFSR\r\n",18,10)) 
+ 327   3             {
+ 328   4               gotoxy(0,2+NUMOFCUR);
+ 329   4               k=2+NUMOFCUR;
+ 330   4              for (j=14;j<32;j++)
+ 331   4               {
+ 332   5                  if (epsBuff[j]=='"')
+ 333   5                   break;
+ 334   5                  if (epsBuff[j+1]=='.')
+ 335   5                   {
+ 336   6                     ptr((epsBuff[j]&0xf)|0x80);
+ 337   6                     k++;
+ 338   6                     j++;
+ 339   6                     gotoxy(0,k);
+ 340   6                   }
+ 341   5                else
+ 342   5                 ptr((epsBuff[j]&0xf));
+ 343   5                }
+ 344   4            
+ 345   4              }
+ 346   3          
+ 347   3          //find time server and get the time
+ 348   3          time_wait(5);
+ 349   3          if (SendToESP(  "AT+CIPSTART=4,\"UDP\",\"time.nist.gov\",123\r\n",10,5))   //wait OK udp connectin
+ 350   3          {
+ 351   4            //OK recieved now send only one enter
+ 352   4             if (SendToESP( "AT+CIPSEND=4,1\r\n",255,5))   //wait 5 seconds for connectinp
+ 353   4              {
+ 354   5                if (SendToESP(  "\r",13,5))   //wait 5 seconds for directly wait for time
+ 355   5                {
+ 356   6                  //time recieved
+ 357   6                  t=*((long *) &epsBuff[40]);
+ 358   6                  t-=0x83aa7e80L - 10800L; //1970-1900 + 3 hours          
+ 359   6                  rtc_writeTime(t);
+ 360   6                  my_data.dat.syntime=t;
+ 361   6                }
+ 362   5              }
+ 363   4            SendToESP(  "AT+CIPCLOSE=4\r\n",10,5); // wait close the connecton
+ 364   4          }
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 7   
+
+ 365   3        } 
+ 366   2       break;
+ 367   2       
+ 368   2       
+ 369   2       case 2: // ap mode
+ 370   2         initEps(command2);
+ 371   2         if (SendToESP( "AT+CIFSR\r\n",16,10)) 
+ 372   2          {
+ 373   3            gotoxy(0,2);
+ 374   3            k=2;
+ 375   3            for (j=13;j<32;j++)
+ 376   3             {
+ 377   4               if (epsBuff[j]=='"')
+ 378   4                 break;
+ 379   4               if (epsBuff[j+1]=='.')
+ 380   4                {
+ 381   5                   ptr((epsBuff[j]&0xf)|0x80);
+ 382   5                   k++;
+ 383   5                   j++;
+ 384   5                   gotoxy(0,k);
+ 385   5                }
+ 386   4               else
+ 387   4                 ptr((epsBuff[j]&0xf));
+ 388   4             }
+ 389   3            
+ 390   3          }  
+ 391   2        break;
+ 392   2          
+ 393   2       //IP is shwon wait 5 sec to clear ip
+ 394   2          
+ 395   2        case 3: //mode initial
+ 396   2          SendToESP(  "AT+RESTORE\r\n",12,15);
+ 397   2          initEps(command3);
+ 398   2          //now clear flash
+ 399   2          for (k=1;k<9;k++)
+ 400   2           helpbuff[k]=0xff;
+ 401   2          WATCHDOG;
+ 402   2          k=0;
+ 403   2          do
+ 404   2           {
+ 405   3             helpbuff[0]=k; //select address to clear 8 bytes
+ 406   3             WriteI2C(EEADDR,helpbuff,9);
+ 407   3             for (j=5;j;j--) //wait ee to be ready
+ 408   3              {
+ 409   4               TF2H=0;
+ 410   4               while (!TF2H)
+ 411   4                WATCHDOG; //500HZ refresh rate 
+ 412   4              }
+ 413   3              k+=8;
+ 414   3           } while (k);
+ 415   2          my_data.dat.mode=0; //set mode to 0 wait init
+ 416   2          WATCHDOG;
+ 417   2          rtc_writeram();
+ 418   2          while(1);   //watchdog restart   
+ 419   2          break;
+ 420   2      }
+ 421   1      
+ 422   1       for (i=0;i<800;i++)
+ 423   1        {
+ 424   2            while (!TF2H)
+ 425   2               WATCHDOG; //500HZ refresh rate
+ 426   2            TF2H=0;
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 8   
+
+ 427   2        }
+ 428   1        
+ 429   1       for (j=0;j<NUMOFCUR*2;j++) // print rates
+ 430   1        {
+ 431   2           gotoxy(0,j+TIMER);
+ 432   2           prnval(j);
+ 433   2           WATCHDOG;
+ 434   2        }
+ 435   1        
+ 436   1       t=rtc_readTime();
+ 437   1       date_time(&tim,t);
+ 438   1       write_time();
+ 439   1       write_date();    
+ 440   1        
+ 441   1       while (1)
+ 442   1       {     
+ 443   2            while (!TF2H)
+ 444   2               WATCHDOG; //500HZ refresh rate
+ 445   2            TF2H=0;
+ 446   2      
+ 447   2            if (rtc_readTime()-t)
+ 448   2            {
+ 449   3              t=rtc_readTime();
+ 450   3              tim.second++;
+ 451   3              if (tim.second==60)
+ 452   3              {
+ 453   4                 date_time(&tim,t);
+ 454   4                 write_time();
+ 455   4                 write_date();
+ 456   4              }
+ 457   3              if (t&0x1) //1 sec count
+ 458   3              {
+ 459   4               SetPoint(3,1); //the points for the clock
+ 460   4               }
+ 461   3             else
+ 462   3              {
+ 463   4                SetPoint(3,0);
+ 464   4               }
+ 465   3             }
+ 466   2             if (answer!=0)
+ 467   2             {
+ 468   3               switch (answer)
+ 469   3               {  
+ 470   4      
+ 471   4                  case 13:  
+ 472   4                    answer=0;
+ 473   4                    if (com_stat==0) //wait handshake
+ 474   4                    {
+ 475   5                      if (strncmp(epsBuff,"Hi!\r\n",5)==0)
+ 476   5                      {
+ 477   6                       //recieved high for computer comunication
+ 478   6                        strcpy(helpbuff,VERSION);
+ 479   6                        strcpy(combuff," \r\n");
+ 480   6                        combuff[0]=(my_data.dat.mode&0xf)+'0';
+ 481   6                        strcat(helpbuff,combuff);
+ 482   6                        strcpy (combuff,"AT+CIPSEND=");
+ 483   6                        strncat(combuff,(char *) &cannel,1);
+ 484   6                        strcat (combuff,",");               
+ 485   6                        itoa(strlen(helpbuff),combuff);
+ 486   6                        strcat(combuff,"\r\n");
+ 487   6                        SendToESP(combuff,0,0);                 
+ 488   6                        break;
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 9   
+
+ 489   6                      }
+ 490   5                      //here i must check for phone communication
+ 491   5                      SendToESP("AT+CIPCLOSE=5\r\n",10,5);  
+ 492   5                      break;
+ 493   5                    }
+ 494   4                   if (com_stat==1) //handshake happend
+ 495   4                   {
+ 496   5                     if (strncmp(epsBuff,"STA",3)==0) //set to station
+ 497   5                     {
+ 498   6                       strcpy(combuff,"AT+CWJAP=");
+ 499   6                       strcat(combuff,&epsBuff[3]); //ready after reset
+ 500   6                       SendToESP( "AT+RST\r\n",12,15);  //reset the esp
+ 501   6                       if (SendToESP( "AT+CWMODE=1\r\n",10,15))
+ 502   6                       {
+ 503   7                         //station send succesfuly
+ 504   7                          if (SendToESP(  combuff,12,15))
+ 505   7                          {
+ 506   8                            //Got ip all is ok go to mode 1
+ 507   8                               my_data.dat.mode=1;
+ 508   8                               rtc_writeram();  
+ 509   8                               //now reset
+ 510   8                               while(1);
+ 511   8                          }
+ 512   7                          else
+ 513   7                          {
+ 514   8                            //something wrog got to mode 3
+ 515   8                               my_data.dat.mode=3;
+ 516   8                               rtc_writeram();  
+ 517   8                               //now reset
+ 518   8                               while(1);
+ 519   8                          }                     
+ 520   7                       }
+ 521   6                       break;
+ 522   6                     }
+ 523   5                     if (strncmp(epsBuff,"APN",3)==0) //set to station
+ 524   5                     {
+ 525   6                       strcpy(combuff,"AT+CWSAP=");
+ 526   6                       strcat(combuff,&epsBuff[3]); //ready after reset
+ 527   6                       SendToESP( "AT+RST\r\n",12,15);  //reset the esp
+ 528   6                       if (SendToESP( "AT+CWMODE=2\r\n",10,15))
+ 529   6                       {
+ 530   7                         //station send succesfuly
+ 531   7                          if (SendToESP(  combuff,12,15))
+ 532   7                          {
+ 533   8                            //Got ip all is ok go to mode 1
+ 534   8                               my_data.dat.mode=2;
+ 535   8                               rtc_writeram();  
+ 536   8                               //now reset
+ 537   8                               while(1);
+ 538   8                          }
+ 539   7                          else
+ 540   7                          {
+ 541   8                            //something wrog got to mode 3
+ 542   8                               my_data.dat.mode=3;
+ 543   8                               rtc_writeram();  
+ 544   8                               //now reset
+ 545   8                               while(1);
+ 546   8                          }                     
+ 547   7                       }
+ 548   6                       break;
+ 549   6                     }
+ 550   5                     // SET(B,S)ccVVVVVVVV
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 10  
+
+ 551   5                     if (strncmp(epsBuff,"SET",3)==0)
+ 552   5                     {
+ 553   6                       j=epsBuff[4]&0x0f;
+ 554   6                       j*=10;
+ 555   6                       j+=epsBuff[5]&0x0f;
+ 556   6                       //currency number on j
+ 557   6                       if (j>=NUMOFCUR)
+ 558   6                         break;
+ 559   6                       if (epsBuff[3]=='S')
+ 560   6                         j+=NUMOFCUR;
+ 561   6                       else
+ 562   6                         if (epsBuff[3]!='B')
+ 563   6                           break;
+ 564   6                       helpbuff[0]=j*4; //address of currency
+ 565   6                       for (k=6;k<14;k++)
+ 566   6                        {
+ 567   7                          epsBuff[k]-='0';
+ 568   7                          if (epsBuff[k]>9)
+ 569   7                            epsBuff[k]-=7;
+ 570   7                        }
+ 571   6                        //===
+ 572   6                        k=epsBuff[6];
+ 573   6                        k<<=4;
+ 574   6                        k+=epsBuff[7];
+ 575   6                        helpbuff[1]=k;
+ 576   6                        //===
+ 577   6                        k=epsBuff[8];
+ 578   6                        k<<=4;
+ 579   6                        k+=epsBuff[9];
+ 580   6                        helpbuff[2]=k;
+ 581   6                        //===
+ 582   6                        k=epsBuff[10];
+ 583   6                        k<<=4;
+ 584   6                        k+=epsBuff[11];
+ 585   6                        helpbuff[3]=k;
+ 586   6                        //===
+ 587   6                        k=epsBuff[12];
+ 588   6                        k<<=4;
+ 589   6                        k+=epsBuff[13];
+ 590   6                        helpbuff[4]=k;  
+ 591   6                        WriteI2C(EEADDR,helpbuff,5);
+ 592   6                        //wait 5 ms to be writen in the EEPROM
+ 593   6                        TF2H=0;
+ 594   6                        while (!TF2H)
+ 595   6                          WATCHDOG; //500HZ refresh rate
+ 596   6                        TF2H=0;
+ 597   6                        while (!TF2H)
+ 598   6                          WATCHDOG; //500HZ refresh rate
+ 599   6                        gotoxy(0,j+TIMER);
+ 600   6                        prnval(j);
+ 601   6                        strcpy (combuff,"AT+CIPSEND=");
+ 602   6                        strncat(combuff,(char *) &cannel,1);
+ 603   6                        strcat (combuff,",8\r\n");  
+ 604   6                        strcpy (helpbuff,"SET OK\r\n");
+ 605   6                        com_stat=0; //dummy
+ 606   6                        SendToESP(combuff,0,0);   
+ 607   6                       break;
+ 608   6                     }
+ 609   5                     if (strncmp(epsBuff,"NAME",4)==0)
+ 610   5                     {
+ 611   6                       j=epsBuff[4]&0x0f;
+ 612   6                       j*=10;
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 11  
+
+ 613   6                       j+=epsBuff[5]&0x0f;
+ 614   6                       if (j>=NUMOFCUR)
+ 615   6                         break;
+ 616   6                       j*=4;
+ 617   6                       j+=NAMES;
+ 618   6                       memset(helpbuff,0xff,5);
+ 619   6                       for (k=1;k<5;k++)
+ 620   6                        if (isalnum(epsBuff[5+k]))
+ 621   6                          helpbuff[k]=epsBuff[5+k];
+ 622   6                        else
+ 623   6                          break; //break the for loop
+ 624   6                       helpbuff[0]=j;
+ 625   6                       WriteI2C(EEADDR,helpbuff,5);
+ 626   6                        //wait 5 ms to be writen in the EEPROM
+ 627   6                       TF2H=0;
+ 628   6                       while (!TF2H)
+ 629   6                          WATCHDOG; //500HZ refresh rate
+ 630   6                       TF2H=0;
+ 631   6                       while (!TF2H)
+ 632   6                          WATCHDOG; //500HZ refresh rate
+ 633   6                       strcpy (combuff,"AT+CIPSEND=");
+ 634   6                       strncat(combuff,(char *) &cannel,1);
+ 635   6                       strcat (combuff,",9\r\n"); 
+ 636   6                       strcpy (helpbuff,"NAME OK\r\n");
+ 637   6                       com_stat=0; //dummy
+ 638   6                       SendToESP(combuff,0,0);                   
+ 639   6                       break;
+ 640   6                     }
+ 641   5                     if (strncmp(epsBuff,"GET",3)==0)
+ 642   5                     {
+ 643   6                       strcpy(helpbuff,"C");
+ 644   6                       itoa(com_stat-1,&helpbuff[1]);
+ 645   6                       strcat(helpbuff,",'");
+ 646   6                       k=(com_stat-1)*4;
+ 647   6                       k+=NAMES;
+ 648   6                       WriteI2C(EEADDR,&k,1);
+ 649   6                       ReadI2C(EEADDR,(char *) combuff,4);
+ 650   6                       for (k=0;k<4;k++)
+ 651   6                        if (!isalnum(combuff[k]))
+ 652   6                          break; //iner loop
+ 653   6                       combuff[k]=0;
+ 654   6                       strcat(helpbuff,combuff);
+ 655   6                       strcat(helpbuff,"',");
+ 656   6                       asciival(com_stat-1,helpbuff);
+ 657   6                       strcat(helpbuff,",");
+ 658   6                       asciival(com_stat+NUMOFCUR-1,helpbuff);
+ 659   6                       strcat(helpbuff,"\r\n");
+ 660   6                       strcpy (combuff,"AT+CIPSEND=");
+ 661   6                       strncat(combuff,(char *) &cannel,1);
+ 662   6                       strcat(combuff,",");               
+ 663   6                       itoa(strlen(helpbuff),combuff);
+ 664   6                       strcat(combuff,"\r\n");
+ 665   6                       if (com_stat>=NUMOFCUR)
+ 666   6                         com_stat=1;
+ 667   6                       SendToESP(combuff,0,0);                  
+ 668   6                       break;
+ 669   6                     }
+ 670   5                     if (strncmp(epsBuff,"BRN",3)==0)  //brigntess
+ 671   5                     {
+ 672   6                       for (k=3;k<11;k++)
+ 673   6                        {
+ 674   7                          epsBuff[k]-='0';
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 12  
+
+ 675   7                          if (epsBuff[k]>9)
+ 676   7                            epsBuff[k]-=7;
+ 677   7                        }
+ 678   6                        k=epsBuff[3];
+ 679   6                        k<<=4;
+ 680   6                        k+=epsBuff[4];
+ 681   6                        my_data.dat.bright[0]=k;
+ 682   6                        //===
+ 683   6                        k=epsBuff[5];
+ 684   6                        k<<=4;
+ 685   6                        k+=epsBuff[6];
+ 686   6                        my_data.dat.bright[1]=k;
+ 687   6                        //===
+ 688   6                        k=epsBuff[7];
+ 689   6                        k<<=4;
+ 690   6                        k+=epsBuff[8];
+ 691   6                        my_data.dat.bright[2]=k;
+ 692   6                          //===
+ 693   6                        k=epsBuff[9];
+ 694   6                        k<<=4;
+ 695   6                        k+=epsBuff[10];
+ 696   6                        my_data.dat.bright[3]=k;  
+ 697   6                        for (j=0;j<NUMOFCUR*2;j++) // print rates
+ 698   6                        {
+ 699   7                          gotoxy(0,j+TIMER);
+ 700   7                          prnval(j);
+ 701   7                          WATCHDOG;
+ 702   7                        } 
+ 703   6                        date_time(&tim,t);
+ 704   6                        write_time();
+ 705   6                        write_date();
+ 706   6                       rtc_writeram();
+ 707   6                       strcpy (combuff,"AT+CIPSEND=");
+ 708   6                       strncat(combuff,(char *) &cannel,1);
+ 709   6                       strcat (combuff,",8\r\n"); 
+ 710   6                       strcpy (helpbuff,"BRN OK\r\n");
+ 711   6                       com_stat=0; //dummy
+ 712   6                       SendToESP(combuff,0,0);    
+ 713   6                     }
+ 714   5                     
+ 715   5                     if (strncmp(epsBuff,"RST",3)==0)  //RESTART in mode 3
+ 716   5                     {
+ 717   6                       my_data.dat.mode=3;
+ 718   6                       rtc_writeram();
+ 719   6                       while(1);
+ 720   6                     }
+ 721   5                   }
+ 722   4                   if (com_stat>1)
+ 723   4                   {
+ 724   5                     if (strncmp(epsBuff,"GET",3)==0)
+ 725   5                     {
+ 726   6                       strcpy(helpbuff,"C");
+ 727   6                       itoa(com_stat-1,&helpbuff[1]);
+ 728   6                       strcat(helpbuff,",'");
+ 729   6                       k=(com_stat-1)*4;
+ 730   6                       k+=NAMES;
+ 731   6                       WriteI2C(EEADDR,&k,1);
+ 732   6                       ReadI2C(EEADDR,(char *) combuff,4);
+ 733   6                       for (k=0;k<4;k++)
+ 734   6                        if (!isalnum(combuff[k]))
+ 735   6                          break; //iner loop
+ 736   6                       combuff[k]=0;
+C51 COMPILER V9.55   DISPLPLAY_SLOT_MAIN                                                   04/12/2019 12:10:20 PAGE 13  
+
+ 737   6                       strcat(helpbuff,combuff);
+ 738   6                       strcat(helpbuff,"',");
+ 739   6                       asciival(com_stat-1,helpbuff);
+ 740   6                       strcat(helpbuff,",");
+ 741   6                       asciival(com_stat+NUMOFCUR-1,helpbuff);
+ 742   6                       strcat(helpbuff,"\r\n");
+ 743   6                       strcpy (combuff,"AT+CIPSEND=");
+ 744   6                       strncat(combuff,(char *) &cannel,1);
+ 745   6                       strcat(combuff,",");               
+ 746   6                       itoa(strlen(helpbuff),combuff);
+ 747   6                       strcat(combuff,"\r\n");
+ 748   6                       if (com_stat>=NUMOFCUR)
+ 749   6                         com_stat=0;
+ 750   6                       SendToESP(combuff,0,0);
+ 751   6                        
+ 752   6                       break;
+ 753   6                     }
+ 754   5                   }
+ 755   4                   SendToESP("AT+CIPCLOSE=5\r\n",10,5); 
+ 756   4                   com_stat=0;  
+ 757   4                  break;
+ 758   4                  case 255:
+ 759   4                     answer=0;
+ 760   4                     if (!SendToESP(helpbuff,14,5))
+ 761   4                       SendToESP("AT\r\n",14,5);
+ 762   4                     else
+ 763   4                       com_stat++;    //answer sent go to next status
+ 764   4                    break;
+ 765   4                  default:
+ 766   4                    answer=0;
+ 767   4                   break;
+ 768   4               }
+ 769   3               
+ 770   3             }
+ 771   2        
+ 772   2       }
+ 773   1      
+ 774   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   3485    ----
+   CONSTANT SIZE    =    526    ----
+   XDATA SIZE       =   ----      32
+   PDATA SIZE       =     96    ----
+   DATA SIZE        =     15      30
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,111 @@
+C51 COMPILER V9.55   I2C                                                                   04/12/2019 12:10:21 PAGE 1   
+
+
+C51 COMPILER V9.55, COMPILATION OF MODULE I2C
+OBJECT MODULE PLACED IN i2c.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE i2c.c OPTIMIZE(9,SPEED) REGFILE(.\DisplayRoulette.ORC) BROWSE DEBUG OBJE
+                    -CTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "display_slot.h"
+   2          #include <intrins.h>
+   3          #include <ctype.h>
+   4          
+   5          
+   6                      
+   7          unsigned char ReadI2C(unsigned char address,char *dat,char num)
+   8          {
+   9   1                  STO = 0;                 // stop condition bit must be zero
+  10   1                  STA = 1;                 // manually clear STA
+  11   1                  while (!SI);             // wait for start to complete          
+  12   1                  SMB0DAT = address  | 1;  // A6..A0 + read
+  13   1                  STA = 0;                 // manually clear STA
+  14   1                  SI = 0;                  // continue
+  15   1                  while (!SI);             // wait for completion
+  16   1                  if (!ACK)                // if not acknowledged, stop
+  17   1                   {
+  18   2                    STO = 1;               // stop condition bit
+  19   2                    SI = 0;                // generate stop condition
+  20   2                    return 0;              //return error
+  21   2                   }
+  22   1                   
+  23   1                  while (num--)
+  24   1                  {
+  25   2                    SI = 0;                // continue
+  26   2                    while (!SI);           // wait for completion
+  27   2                    *dat=SMB0DAT;
+  28   2                    ACK = (num!=0);       // NACK, last byte
+  29   2                    dat++;
+  30   2                //    ACK = (num!=0);     // NACK, last byte
+  31   2                  }
+  32   1                 STO = 1;                 // stop condition bit
+  33   1                 SI = 0;                  // generate stop condition
+  34   1                 return 1;                //success
+  35   1      }
+  36          
+  37          unsigned char WriteI2C(unsigned char address,char *dat,char num)
+  38          {
+  39   1           STO=0; 
+  40   1           STA=1;             //generate start
+  41   1           while(!SI);
+  42   1           SMB0DAT=address;   //Write to keyboard
+  43   1       
+  44   1           STA=0;
+  45   1           SI=0;
+  46   1           while(!SI);
+  47   1      
+  48   1          if (!ACK)         // if not acknowledged, stop
+  49   1            {
+  50   2              STO = 1;      // stop condition bit
+  51   2              SI = 0;       // generate stop condition
+  52   2              return 0;     //No ACK
+  53   2            }
+  54   1          while (num--)
+C51 COMPILER V9.55   I2C                                                                   04/12/2019 12:10:21 PAGE 2   
+
+  55   1          {
+  56   2             SMB0DAT=*dat;   
+  57   2             SI=0;
+  58   2             while(!SI);
+  59   2             if (!ACK)         // if not acknowledged, stop
+  60   2              {
+  61   3                STO = 1;      // stop condition bit
+  62   3                SI = 0;       // generate stop condition
+  63   3                return 0;     //No ACK
+  64   3              }
+  65   2             dat++;
+  66   2          }
+  67   1         
+  68   1          STO=1;
+  69   1          SI=0;
+  70   1          while(STO);  
+  71   1          return 1;
+  72   1      }
+  73          
+  74          void init_i2c()
+  75           {
+  76   1            TR0=1; //start timer0 for the I2C
+  77   1            SMB0CF &= ~0x80; // Reset communication
+  78   1            SMB0CF |= 0x80;
+  79   1            STA = 0;
+  80   1            STO = 0;
+  81   1            ACK = 0;
+  82   1      
+  83   1       }
+  84                
+  85          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    154    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
